@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2B0068FFFDF977F1284C85C9 /* BibleAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472FB6766719939D26B29274 /* BibleAIApp.swift */; };
 		503D427FAE08B50C8D8F117A /* ImageSpikeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */; };
+		C1F52DE2DDA20B1E87F7A1F2 /* SDKProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A97BD84490BCAC39672E7E5 /* SDKProbe.swift */; };
 		CA28BDD108E70E76D1046EB9 /* SDKProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */; };
 		F3928752714B7D97489C812B /* AFMAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,7 @@
 		2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbeTests.swift; sourceTree = "<group>"; };
 		36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSpikeTests.swift; sourceTree = "<group>"; };
 		472FB6766719939D26B29274 /* BibleAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleAIApp.swift; sourceTree = "<group>"; };
+		5A97BD84490BCAC39672E7E5 /* SDKProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbe.swift; sourceTree = "<group>"; };
 		5CA62F7F9C9D59A152C70AFC /* BibleAI.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BibleAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7282958AE17679C518C2D43B /* BibleAITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BibleAITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFMAvailabilityTests.swift; sourceTree = "<group>"; };
@@ -67,8 +69,17 @@
 			children = (
 				472FB6766719939D26B29274 /* BibleAIApp.swift */,
 				F288DF7943B85654AACCDD26 /* Info.plist */,
+				A53360B94963AB3388B20C68 /* AI */,
 			);
 			path = BibleAI;
+			sourceTree = "<group>";
+		};
+		A53360B94963AB3388B20C68 /* AI */ = {
+			isa = PBXGroup;
+			children = (
+				5A97BD84490BCAC39672E7E5 /* SDKProbe.swift */,
+			);
+			path = AI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -146,6 +157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B0068FFFDF977F1284C85C9 /* BibleAIApp.swift in Sources */,
+				C1F52DE2DDA20B1E87F7A1F2 /* SDKProbe.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
