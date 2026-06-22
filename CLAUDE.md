@@ -13,8 +13,13 @@ Pre-implementation. The repo contains a comprehensive design document (`design.m
 ## Platform & Stack
 
 - **iOS 27 beta · Swift · SwiftUI · SwiftData**
-- **On-device generation:** Apple Foundation Models (`FoundationModels` framework) + **Core AI** (`CoreAIDiffusionPipeline` for image — SD 1.5/2.1/3.5M and FLUX.2 Klein 4B; `CoreAILanguageModels` for custom LLMs — Qwen3 0.6B/4B). Models ship as `.aimodel` files, downloaded at runtime (never bundled). Music and video generation are cloud-only (no Core AI catalog model available).
+- **On-device generation:**
+  - Text: Apple **Foundation Models** (`FoundationModels` framework, `SystemLanguageModel.default`) — confirmed present and working in the iOS 27 SDK.
+  - Image: **Core ML** (`CoreML` framework) via Apple's `swift-coreml-diffusers` package — SD 1.5/2.1/3.5 M. Models ship as `.mlpackage` files (exported with `coremltools`), downloaded at runtime (never bundled). FLUX.2 Klein 4B on-device is **TBD** pending the Task 0' Core ML export spike.
+  - Custom on-device text (Qwen3): **unavailable** — there is no `CoreAILanguageModels` (or any custom-LLM) framework in the iOS 27 SDK. Qwen3 text falls through to cloud.
+  - Music and video generation are cloud-only.
 - **Cloud fallback:** OpenRouter (user's own key) → Anthropic (user's own key)
+- **Task 0 finding (2026-06-22):** `CoreAIDiffusionPipeline` / `CoreAILanguageModels` do **not** exist in the iOS 27 SDK (`CoreAI.framework` is a 9-line stub). Do not reintroduce any `CoreAI*` API or the `.aimodel` format.
 - **Navigation:** `NavigationStack` + `TabView` via a single `AppRouter` (`@Observable`) injected into `@Environment`
 - **Async:** Swift Concurrency throughout; generation streams via `AsyncThrowingStream<GenerationProgress, Error>`
 
@@ -29,10 +34,10 @@ Pre-implementation. The repo contains a comprehensive design document (`design.m
 - `MediaStore` owns `Application Support/Artifacts/`. All artifact paths stored as **relative** paths — never absolute (container UUID changes on reinstall).
 
 ### Generation Routing
-`GenerationEngine` reads `AIAvailability` (AFM availability, Core AI model file presence, network reachability) and `AppSettings.defaultEngine` to route each `GenerationJob` to the correct concrete generator. Image routing priority: FLUX.2 Klein 4B → SD 3.5 M → SD 2.1 → SD 1.5 → cloud. Text routing priority: AFM → Qwen3 4B → Qwen3 0.6B → OpenRouter → Anthropic. Per-capability protocols (`ImageGenerating`, `TextGenerating`, `MusicGenerating`, `VideoGenerating`) are `Actor`-constrained.
+`GenerationEngine` reads `AIAvailability` (AFM availability, on-device Core ML model file presence, network reachability) and `AppSettings.defaultEngine` to route each `GenerationJob` to the correct concrete generator. Image routing priority: SD 3.5 M → SD 2.1 → SD 1.5 (Core ML `.mlpackage`) → cloud (FLUX-class is cloud-only until a Core ML export is proven). Text routing priority: AFM → OpenRouter → Anthropic (Qwen3 on-device tiers removed — no custom-LLM framework in the SDK). Per-capability protocols (`ImageGenerating`, `TextGenerating`, `MusicGenerating`, `VideoGenerating`) are `Actor`-constrained.
 
 ### Concurrency Rules
-- Core AI inference and model downloads: never on main actor
+- On-device (Core ML) inference and model downloads: never on main actor
 - `SwiftData.ModelContext` writes: `@ModelActor`-isolated type
 - Generators return `Sendable` value types only; callers insert into `ModelContext` on main actor
 - Only one heavy generation at a time (serial busy-guard in `GenerationEngine`)
@@ -47,7 +52,7 @@ API keys (OpenRouter, Anthropic) stored in Keychain only — never SwiftData or 
 
 - **YouVersion API non-commercial clause** (opened April 2026): access is revoked if the app adds ads, paywalls, or paid tiers. Any monetization must be validated against current YouVersion terms first, or verse sourcing must move to a different provider.
 - **Bible translations:** Default to public-domain translations (KJV, WEB, ASV). ESV/NIV are commercially restricted — do not use them for generated art.
-- **Task 0 is a hard blocker:** Prove SD 1.5 or FLUX.2 Klein 4B exports to `.aimodel` (via `coreai.diffusion.export`) and runs inference in ≤15s on iOS 27 target hardware before building any image-generation UI.
+- **Task 0 (complete) / Task 0' is the hard blocker:** Task 0 confirmed `CoreAIDiffusionPipeline` is absent from the iOS 27 SDK; on-device image is re-scoped to Core ML (`.mlpackage`). **Task 0':** prove SD 1.5 exports via `coremltools` to `.mlpackage` and runs inference in ≤15s on iOS 27 target hardware before building any image-generation UI.
 - **Apple Foundation Models availability gate:** Check `SystemLanguageModel.default.availability` — handle `.unavailable(reason:)` cases (`deviceNotEligible`, `appleIntelligenceNotEnabled`, `modelNotReady`) with a templated-prompt fallback. Do not gate on `#available`.
 
 ## Design Tokens (from `BibleAITheme.swift`)
@@ -58,4 +63,4 @@ Fonts: `NunitoSans` for all UI body/headings, `Caveat` for display/handwritten a
 
 ## Implementation Task Order
 
-See `design.md §10` for the full numbered task table (Tasks 0–55). Task 0 (Core AI image spike) blocks all image-generation tasks. Tasks 9a (`APIClient`) and 9b (`ModelLocator`) must precede the services that depend on them. Task 7 (`AIAvailability`) must precede all generators. Task 3 (`AppRouter`) must precede Task 4 (`MainTabView`).
+See `design.md §10` for the full numbered task table (Tasks 0–55). Task 0' (Core ML image spike) blocks all image-generation tasks (Task 0, the original Core AI spike, returned a negative result). Tasks 9a (`APIClient`) and 9b (`ModelLocator`) must precede the services that depend on them. Task 7 (`AIAvailability`) must precede all generators. Task 3 (`AppRouter`) must precede Task 4 (`MainTabView`).
