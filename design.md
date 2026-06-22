@@ -26,7 +26,7 @@ Someone who shares faith-themed visual content (Reels, Stories, quote posts) and
 | Capability | On-device | Cloud fallback |
 |---|---|---|
 | Prompt / caption generation (text) | AFM (FoundationModels) | OpenRouter → Anthropic |
-| Image generation | SD 3.5 M, SD 2.1, SD 1.5 (Core ML `.mlpackage`) | OpenRouter (incl. FLUX-class) |
+| Image generation | SD 3.5 M, SD 2.1, SD 1.5 (Core ML `.mlmodelc`) | OpenRouter (incl. FLUX-class) |
 | Slideshow assembly | local (compositing) | — |
 | Music | curated sample library | OpenRouter (cloud-only generation) |
 | Video | — | cloud-only (OpenRouter) |
@@ -219,12 +219,12 @@ ViewModel: `SettingsViewModel`.
 ### §6.1 Stack & Platform
 - **iOS 27 beta · Swift (Swift 6 concurrency) · SwiftUI · SwiftData.**
 - **On-device generation:**
-  - Image: **Core ML** (`CoreML` framework) via Apple's `swift-coreml-diffusers` package — models as `.mlpackage` files, exported with `coremltools`. SD 1.5/2.1/3.5 M on-device; FLUX.2 Klein 4B path TBD pending the Task 0' Core ML export spike.
+  - Image: **Core ML** (`CoreML` framework) via Apple's `swift-coreml-diffusers` package — models exported with `coremltools` to `.mlpackage`, then compiled to `.mlmodelc` directories for runtime use. SD 1.5/2.1/3.5 M on-device; FLUX.2 Klein 4B path TBD pending the Task 0' Core ML export spike.
   - Built-in text: Apple **Foundation Models** (`FoundationModels`, `SystemLanguageModel.default`) — confirmed present and working in the iOS 27 SDK.
   - Custom on-device text (Qwen3): **unavailable** — there is no on-device custom-LLM framework in the iOS 27 SDK. Qwen3 text falls through to cloud (OpenRouter → Anthropic) for now.
 - **Cloud fallback:** OpenRouter (user key) → Anthropic (user key).
 
-> ⚠️ **Task 0 finding (confirmed 2026-06-22):** the `CoreAIDiffusionPipeline` / `CoreAILanguageModels` frameworks the original design assumed **do not exist** in the iOS 27 SDK — `CoreAI.framework` is a 9-line stub with no diffusion or language-model API. `FoundationModels` (AFM) *is* fully present. On-device image generation is re-scoped to **Core ML** (`.mlpackage`). Do not reintroduce any `CoreAI*` API or `.aimodel` packaging. The Core ML diffusers API and SD-export viability must still be confirmed in **Task 0'** before any image-generation UI is built.
+> ⚠️ **Task 0 finding (confirmed 2026-06-22):** the `CoreAIDiffusionPipeline` / `CoreAILanguageModels` frameworks the original design assumed **do not exist** in the iOS 27 SDK — `CoreAI.framework` is a 9-line stub with no diffusion or language-model API. `FoundationModels` (AFM) *is* fully present. On-device image generation is re-scoped to **Core ML** (`.mlmodelc`). Do not reintroduce any `CoreAI*` API or `.aimodel` packaging. The Core ML diffusers API and SD-export viability must still be confirmed in **Task 0'** before any image-generation UI is built.
 
 ### §6.2 State & DI
 `@Observable` + `@Environment`. **No third-party state management, no DI container.** One `@Observable` ViewModel per major feature screen (named in §5). Shared services (`GenerationEngine`, `MediaStore`, `APIClient`, `KeychainStore`, `AIAvailability`, `ModelDownloadManager`, `YouVersionService`) are constructed once at app root and injected via `@Environment`.
@@ -377,7 +377,7 @@ final class GenerationEngine {
 ```
 
 **Routing tables (best-available first):**
-- **Image (revised, Core ML):** SD 3.5 Medium → SD 2.1 → SD 1.5 (all on-device `.mlpackage`) → cloud (OpenRouter). FLUX.2 Klein is cloud-only until a Core ML export is proven (§6.6); on-device order finalizes after Task 0' perf data.
+- **Image (revised, Core ML):** SD 3.5 Medium → SD 2.1 → SD 1.5 (all on-device `.mlmodelc`) → cloud (OpenRouter). FLUX.2 Klein is cloud-only until a Core ML export is proven (§6.6); on-device order finalizes after Task 0' perf data.
 - **Text (revised):** AFM (if `.available`) → OpenRouter → Anthropic. The Qwen3 on-device tiers were removed — no custom-LLM framework in the iOS 27 SDK (§6.7).
 - **Music:** curated sample library → cloud (OpenRouter). No on-device model.
 - **Video:** cloud (OpenRouter) only. No on-device model.
@@ -388,7 +388,7 @@ final class GenerationEngine {
 
 > **Task 0 finding (2026-06-22):** the originally-specified `CoreAIDiffusionPipeline` is **absent** from the iOS 27 SDK; `CoreAI.framework` is a stub. On-device image generation is re-scoped to **Core ML**. The code below is the *target shape* — the concrete Core ML diffusers API must be confirmed in **Task 0'** before Tasks 12/13 are built.
 
-`CoreMLImageGenerator` (SD family) conforms to `ImageGenerating`, backed by the `CoreML` framework and Apple's **`swift-coreml-diffusers`** package (`StableDiffusionPipeline` from `ml-stable-diffusion`). Models are exported with **`coremltools`** to `.mlpackage` and load from `Application Support/Models/<model-name>/`.
+`CoreMLImageGenerator` (SD family) conforms to `ImageGenerating`, backed by the `CoreML` framework and Apple's **`swift-coreml-diffusers`** package (`StableDiffusionPipeline` from `ml-stable-diffusion`). Models are exported with **`coremltools`** to `.mlpackage`, compiled to `.mlmodelc`, and loaded from `Application Support/Models/<model-name>/`.
 
 ```swift
 import CoreML
@@ -399,7 +399,7 @@ actor CoreMLImageGenerator: ImageGenerating {
         AsyncThrowingStream { continuation in
             Task {
                 do {
-                    // Resolves to the model's compiled .mlmodelc / .mlpackage directory.
+                    // Resolves to the model's compiled .mlmodelc directory (NOT .mlpackage — see Task 0' finding).
                     let resourceURL = try ModelLocator.url(for: job.preferredImageModelID ?? "sd-1-5")
 
                     var mlConfig = MLModelConfiguration()
@@ -438,11 +438,11 @@ actor CoreMLImageGenerator: ImageGenerating {
 }
 ```
 
-**SD 1.5 / 2.1 / 3.5 M:** Core ML `.mlpackage` is the on-device route. SD 1.5 is the Task 0' target (smallest, most likely to clear the ≤15s bar on target hardware); 2.1 and 3.5 M follow once SD 1.5 is proven.
+**SD 1.5 / 2.1 / 3.5 M:** Core ML `.mlmodelc` (compiled from `.mlpackage` via coremltools) is the on-device route. SD 1.5 is the Task 0' target (smallest, most likely to clear the ≤15s bar on target hardware); 2.1 and 3.5 M follow once SD 1.5 is proven.
 
-**FLUX.2 Klein 4B:** **TBD** — Core ML export viability for FLUX.2 is unknown (`coremltools` support for the FLUX architecture is unverified, and 4B may exceed the on-device memory ceiling). Do not plan FLUX.2 on-device until a dedicated spike confirms a working `.mlpackage` export and acceptable inference time. Until then, FLUX-class quality is a cloud-only option.
+**FLUX.2 Klein 4B:** **TBD** — Core ML export viability for FLUX.2 is unknown (`coremltools` support for the FLUX architecture is unverified, and 4B may exceed the on-device memory ceiling). Do not plan FLUX.2 on-device until a dedicated spike confirms a working `.mlpackage` → `.mlmodelc` export and acceptable inference time. Until then, FLUX-class quality is a cloud-only option.
 
-> ⚠️ Confirm in **Task 0'**: the exact `swift-coreml-diffusers` API surface (`StableDiffusionPipeline` initializer, `Configuration` fields, `progressHandler` `step`/`stepCount` semantics, `return false` to cancel), the `coremltools` SD-1.5 export recipe, and the compiled-resource layout `ModelLocator` must resolve.
+> ⚠️ **Task 0' finding (pre-confirmed, 2026-06-22):** `StableDiffusionPipeline(resourcesAt:)` expects a directory of compiled **`.mlmodelc`** bundles, not `.mlpackage` files. `coremltools` produces `.mlpackage`; `--bundle-resources-for-swift-cli` compiles them to `.mlmodelc`. Required files: `TextEncoder.mlmodelc`, `Unet.mlmodelc`, `VAEDecoder.mlmodelc`, `VAEEncoder.mlmodelc`, `vocab.json`, `merges.txt`. `ModelLocator` (Task 9b) must resolve a model ID to this `.mlmodelc` directory, not a `.mlpackage` file. Still to confirm on hardware: exact initializer signature, `progressHandler` `step`/`stepCount` semantics, `return false` to cancel, and inference ≤15s.
 
 ### §6.7 Apple Foundation Models (AFM)
 
@@ -538,7 +538,7 @@ struct MediaStore {
 }
 ```
 
-Downloaded models live in `Application Support/Models/<model-name>/` via `ModelDownloadManager`, **never bundled**. `ModelLocator` resolves a model ID to its on-disk Core ML resource URL (`.mlpackage` / compiled `.mlmodelc`) and reports presence to `AIAvailability`.
+Downloaded models live in `Application Support/Models/<model-name>/` via `ModelDownloadManager`, **never bundled**. `ModelLocator` resolves a model ID to its on-disk compiled `.mlmodelc` directories (exported from `.mlpackage` via coremltools) and reports presence to `AIAvailability`.
 
 **`AIAvailability`** (the routing oracle) checks, in order:
 1. `SystemLanguageModel.default.availability` (AFM).
@@ -574,7 +574,7 @@ final class AIAvailability {
 
 1. **YouVersion non-commercial clause (April 2026).** No ads, paywalls, or paid tiers — doing so can revoke API access. Any monetization must be re-validated against current YouVersion terms first, *or* verse sourcing must move to another provider. This is why the product is "100% free."
 2. **Bible translation copyright.** Default to **public-domain** translations (**KJV, WEB, ASV**). **ESV/NIV are commercially restricted — do not use them for generated art.** Surface licensing caveats per-translation; never silently use a copyrighted translation as an art input.
-3. **Task 0 hard blocker.** Task 0 spike (complete): `CoreAIDiffusionPipeline` absent from iOS 27 SDK — confirmed negative. On-device image re-scoped to Core ML (`.mlpackage`). **Task 0' required:** prove **SD 1.5** exports via `coremltools` to `.mlpackage` and runs inference **≤15s on iOS 27 target hardware** before any image-generation UI is built. If it cannot, image generation re-scopes to cloud-first.
+3. **Task 0 hard blocker.** Task 0 spike (complete): `CoreAIDiffusionPipeline` absent from iOS 27 SDK — confirmed negative. On-device image re-scoped to Core ML (`.mlmodelc`). **Task 0' required:** prove **SD 1.5** exports via `coremltools` to `.mlpackage`, compiles to `.mlmodelc`, and runs inference **≤15s on iOS 27 target hardware** before any image-generation UI is built. If it cannot, image generation re-scopes to cloud-first.
 4. **AFM availability gate.** Always check `SystemLanguageModel.default.availability`; handle `.deviceNotEligible` / `.appleIntelligenceNotEnabled` / `.modelNotReady`. **Do not gate on `#available`.**
 5. **Music generation:** no on-device model → cloud-only (OpenRouter) or curated sample library fallback.
 6. **Video generation:** no on-device model → cloud-only (OpenRouter).
@@ -591,7 +591,7 @@ final class AIAvailability {
 5. **SD 3.5 Medium HF-gating.** It is HuggingFace-gated — confirm the registry download flow can handle gated models (auth token) before listing it.
 6. **Publishing SDKs vs share sheet.** Which platforms get true SDK integration vs system share sheet? Affects §5.6 scope.
 7. **Music: curated library sourcing.** Need royalty-free/public-domain audio for the curated fallback — licensing TBD.
-8. **Storage pressure.** Multiple multi-GB `.mlpackage` model files plus artifacts may exceed comfortable storage on smaller devices. Need an eviction/"Manage" policy in the registry.
+8. **Storage pressure.** Multiple multi-GB `.mlmodelc` model directories plus artifacts may exceed comfortable storage on smaller devices. Need an eviction/"Manage" policy in the registry.
 
 ---
 
@@ -602,7 +602,7 @@ Work top to bottom, respecting **Dependencies**. The TDD agent appends ` - Done!
 | # | Task | Description | Dependencies | Phase |
 |---|---|---|---|---|
 | 0 - Done! | Core AI image spike (HARD BLOCKER) | Export SD 1.5 or FLUX.2 Klein 4B to `.aimodel`; run inference on iOS 27 target hardware in ≤15s. Confirm `CoreAIDiffusionPipeline` API. | — | P0 |
-| 0' | Core ML image spike | Export SD 1.5 to `.mlpackage` via `coremltools`; run inference on iOS 27 target hardware in ≤15s. Confirm Core ML diffusers API. Unblocks Tasks 12, 13, 52, 53. | — | P0 |
+| 0' | Core ML image spike | Export SD 1.5 to `.mlpackage` via `coremltools`, compile to `.mlmodelc`; run inference on iOS 27 target hardware in ≤15s. Confirm Core ML diffusers API. Unblocks Tasks 12, 13, 52, 53. | — | P0 |
 | 1 | Xcode project skeleton | Create iOS 27 SwiftUI app target, Swift 6 mode, folder structure, bundled fonts. | — | P1 |
 | 2 | `BibleAITheme.swift` | Color/spacing/typography tokens; accent resolution; `Font`/`Color` extensions. | 1 | P1 |
 | 3 | `AppRouter` | `@Observable` router: tabs, per-tab `Route` paths, global `Sheet` enum. | 1 | P1 |
@@ -612,7 +612,7 @@ Work top to bottom, respecting **Dependencies**. The TDD agent appends ` - Done!
 | 7 | `AIAvailability` | `@Observable` oracle: AFM availability, model presence, reachability; `refresh()`. | 5 | P2 |
 | 8 | `KeychainStore` | Keychain CRUD for OpenRouter/Anthropic keys. | 1 | P2 |
 | 9a | `APIClient` | Shared URLSession client; `URLProtocol`-mockable; status validation. | 1 | P2 |
-| 9b | `ModelLocator` | Resolve model ID → Core ML resource URL (`.mlpackage` / `.mlmodelc`) under `Models/`; report presence. | 5 | P2 |
+| 9b | `ModelLocator` | Resolve model ID → compiled `.mlmodelc` directory under `Models/`; report presence. | 5 | P2 |
 | 10 | `YouVersionService` | OAuth + guest; verse lookup + verse-of-day; returns `Sendable` `VerseRef`. | 9a | P2 |
 | 11 | `ModelDownloadManager` | Resumable, backgroundable downloads into `Models/`; progress; HF-gated support. | 9a, 9b | P2 |
 | 12 | `CoreMLImageGenerator` (SD) | `ImageGenerating` actor (Core ML / `swift-coreml-diffusers`) for SD 1.5/2.1/3.5; streams step progress. | 0', 6, 9b | P3 |
@@ -655,7 +655,7 @@ Work top to bottom, respecting **Dependencies**. The TDD agent appends ` - Done!
 | 49 | Unit: `MediaStore` | Relative-path round-trip; reinstall (container UUID) robustness. | 6 | P6 |
 | 50 | Unit: `AIAvailability` | All AFM `.unavailable` reasons, model-presence, reachability transitions. | 7 | P6 |
 | 51 | UI: create→save golden path | Verse→format→models→style→Generate→Save in app end-to-end. | 24–31 | P6 |
-| 52 | Integration: Core ML pipeline | Real `.mlpackage` load + inference produces a persisted artifact. | 12, 13 | P6 |
+| 52 | Integration: Core ML pipeline | Real `.mlmodelc` load + inference produces a persisted artifact. | 12, 13 | P6 |
 | 53 | Perf benchmarks | Image inference ≤15s; SD-tier comparison; memory ceiling on target hardware. | 12, 13 | P6 |
 | 54 | Privacy manifest | `PrivacyInfo.xcprivacy`: no tracking; document Keychain + user-key cloud egress. | 40 | P7 |
 | 55 | App Store metadata | Listing, screenshots, "100% free / runs offline" copy; review notes on YouVersion + keys. | 46, 47, 54 | P7 |
