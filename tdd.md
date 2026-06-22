@@ -15,4 +15,5 @@ Please execute the following steps:
 13. Spawn a new tech-lead agent to implement each of the new or updated end to end and/or unit tests, and verify that the new tests fail as expected.
 14. Spawn a general purpose agent to commit/push the changes, explain new or updated end to end and/or unit tests that were written, which tests are now failing, and the code/config that needs to be written to make the failing tests pass, and request the user's permission to proceed.
 15. Spawn a tech-lead agent agent to /loop until the tests pass
-16. Spawn a general purpose agent to commit/push the changes, explain the code/config written to make the failing tests from Step 13 pass, which failing tests from Step 13 are now passing.
+16. Spawn a general purpose agent to commit/push the changes, explain the code/config written to make the failing tests from Step 13 pass, which failing tests from Step 13 are now passing. 
+17. Spawn a general purpose agent to update ./design.md by adding the suffix ` - Done!` to the number column of the task in that was just completed. Commit and push the change to ./design.md
