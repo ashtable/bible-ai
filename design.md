@@ -14,6 +14,7 @@ Bible AI is an iOS app that turns any Bible verse into AI-generated art, slidesh
 - **Free by default** — on-device models are free; cloud models require the user's own API keys (OpenRouter / Anthropic)
 - **Studio energy** — maker-first UX, not a devotional reader
 - **YouVersion integration** — verse lookup and social publishing via YouVersion's API
+  - ⚠ YouVersion Platform API (opened April 2026) carries a **non-commercial clause**: access is revoked if the app adds ads, paywalls, or paid tiers. Any future monetization must be validated against current YouVersion terms, or verse-content sourcing must move to a different provider.
 
 ### Accent palette (user-selectable)
 | Token | Default | Alt 1 | Alt 2 |
@@ -25,6 +26,9 @@ Bible AI is an iOS app that turns any Bible verse into AI-generated art, slidesh
 |------|------|--------|
 | UI body | Nunito Sans | 400 / 600 / 700 / 800 |
 | Handwritten / display | Caveat | 600 / 700 |
+
+### Bible Content
+**Translation defaults:** The app defaults to **public-domain translations** (KJV, WEB, ASV) for generated art to avoid commercial copyright issues. ESV/NIV are not available for commercial use by individual developers. The translation picker surfaces per-source licensing; the YouVersion API determines which translations are actually available for display and export.
 
 ### Background tones
 - Canvas: `#e9e7e2`
@@ -40,14 +44,14 @@ Bible AI is an iOS app that turns any Bible verse into AI-generated art, slidesh
 | UI framework | **SwiftUI** (declarative, iOS 27) | First-class Apple support; `@Observable` replaces ObservableObject cleanly |
 | State / DI | **`@Observable` + `@Environment`** | No third-party dependency; thread-safe; composable |
 | Persistence | **SwiftData** | Replaces Core Data; integrates with `@Query` in SwiftUI |
-| On-device LLM | **Apple Foundation Models** (`FoundationModels` framework, iOS 26+) | Private, no key, runs on-device; used for verse prompt generation |
+| On-device LLM | **Apple Foundation Models** (`FoundationModels` framework) | Private, no key, runs on-device; used for verse prompt generation. Gate on `SystemLanguageModel.default.availability`, switching over `.available` / `.unavailable(reason:)` where reason is `deviceNotEligible`, `appleIntelligenceNotEnabled`, or `modelNotReady` |
 | On-device image | **Core ML** + **SD-Turbo** mlpackage | ~1.8 GB; converts via `coremltools` from HuggingFace |
 | On-device music | **Core ML** + **MusicGen-small** mlpackage | ~1.2 GB |
 | On-device video | **Core ML** + **AnimateDiff-lite** mlpackage | ~2.4 GB |
 | Cloud fallback | **OpenRouter API** (Llama-3 free, FLUX) | User supplies key; zero cost to developer |
 | Premium cloud | **Anthropic API** (Claude Sonnet/Opus) | User supplies key; Apple Foundation Models for cheaper tasks |
 | Navigation | **`NavigationStack` + `TabView`** | Compositional; deep-link friendly |
-| Async | **Swift Concurrency** (`async/await`, `AsyncStream`) | Generation progress via `AsyncStream<GenerationProgress>` |
+| Async | **Swift Concurrency** (`async/await`, `AsyncThrowingStream`) | Generation progress via `AsyncThrowingStream<GenerationProgress, Error>` (see §5 `GenerationEngine`) |
 | YouVersion | **YouVersion API** (REST/OAuth 2.0) | Verse content, reading plans, social publishing |
 | Photo export | **PhotosUI** (`PHPhotoLibrary`) | Save to Camera Roll |
 | Social export | **ShareLink** + platform share sheets | Instagram, TikTok, Facebook, LinkedIn |
@@ -104,7 +108,7 @@ BibleAI/
     │   └── EngineChooserView.swift       # 1C — engine select + download
     │
     ├── Main/
-    │   └── MainTabView.swift             # TabView: Home / Create / Library / Settings
+    │   └── MainTabView.swift             # TabView: Home / Library / Settings (＋ center button presents CreateStepperView)
     │
     ├── Home/
     │   └── HomeView.swift                # 2A — activity feed + FAB (chosen direction)
@@ -151,24 +155,42 @@ struct Verse: Identifiable, Hashable, Codable {
     let book: String
     let chapter: Int
     let verseNumber: Int
-    let translation: String     // "NIV", "ESV", etc.
+    let translation: String     // Default to public-domain: KJV, WEB, ASV — ESV/NIV are commercially restricted
     let source: VerseSource     // .youVersion | .local
 }
 enum VerseSource: String, Codable { case youVersion, local }
 ```
 
 ### 4.2 AIModel
+Catalog metadata is split from install state: the manifest entry is immutable and decoded each launch, the install record is a persisted `@Model` row, and `AIModel` is the view-facing composite assembled by `ModelRegistry`.
 ```swift
-struct AIModel: Identifiable, Hashable, Codable {
-    let id: String                // "sd-turbo", "musicgen-small"
+// Immutable catalog entry — decoded from models-manifest.json each launch
+struct AIModelManifestEntry: Identifiable, Hashable, Codable {
+    let id: String
     let name: String
     let capability: ModelCapability
     let source: ModelSource
     let sizeGB: Double
-    var isInstalled: Bool
-    var downloadProgress: Double?   // 0.0–1.0 while downloading
     let isFree: Bool
-    let requiresKey: KeyRequirement // .none | .openRouter | .anthropic
+    let requiresKey: KeyRequirement
+    let downloadURL: URL
+}
+
+// Persisted install record — one @Model row per installed model
+@Model
+final class InstalledModel {
+    var modelId: String       // matches AIModelManifestEntry.id
+    var localRelativePath: String   // resolved by MediaStore
+    var installedAt: Date
+    var sizeBytes: Int64
+}
+
+// View-facing composite (assembled by ModelRegistry)
+struct AIModel: Identifiable {
+    let manifest: AIModelManifestEntry
+    var installRecord: InstalledModel?
+    var downloadProgress: Double?   // transient, not persisted
+    var isInstalled: Bool { installRecord != nil }
 }
 
 enum ModelCapability: String, Codable { case text, image, music, video }
@@ -182,14 +204,18 @@ enum KeyRequirement: String, Codable  { case none, openRouter, anthropic }
 final class Creation {
     var id: UUID
     var title: String
-    var verse: Verse
+    var verse: Verse                  // stored as a Codable blob — for display only, NOT queryable
+    // Denormalized from `verse` for #Predicate filtering (Codable blobs can't be queried)
+    var verseReference: String
+    var verseBook: String
+    var verseTranslation: String
     var format: CreationFormat
     var prompt: String
     var modelsUsed: [String]          // model ids
     var artifactPath: String          // relative path in app container
     var thumbnailPath: String?
     var privacy: PrivacySetting
-    var publishedPlatforms: [String]  // SocialPlatform raw values
+    var publishedPlatforms: [SocialPlatform]
     var createdAt: Date
     var generationDurationSeconds: Double
 }
@@ -197,6 +223,7 @@ final class Creation {
 enum CreationFormat: String, Codable  { case image, slideshow, video }
 enum PrivacySetting: String, Codable  { case `private`, published }
 ```
+> `SocialPlatform` is `RawRepresentable`+`Codable`; SwiftData persists it as a typed array.
 
 ### 4.4 GenerationJob
 ```swift
@@ -212,10 +239,20 @@ struct GenerationJob: Identifiable {
 enum GenerationStatus {
     case queued
     case running(progress: Double, stage: String)
-    case complete(Creation)
-    case failed(Error)
+    case complete(GenerationResult)
+}
+
+struct GenerationResult: Sendable {
+    let artifactURL: URL        // relative path, resolved by MediaStore
+    let thumbnailURL: URL?
+    let prompt: String
+    let modelsUsed: [String]
+    let durationSeconds: Double
+    let seed: UInt64?
 }
 ```
+> `Creation` is inserted into `ModelContext` by the view model on the main actor; the generator emits only `Sendable` values.
+> Generation failure is propagated as the thrown `Error` in `AsyncThrowingStream<GenerationStatus, Error>` — the `.failed` case is redundant with the stream's termination channel.
 
 ### 4.5 AppSettings (SwiftData)
 ```swift
@@ -244,9 +281,28 @@ enum SocialPlatform: String, CaseIterable, Codable, Identifiable {
 enum AspectRatio: String, CaseIterable { case square, portrait45, portrait916 }
 ```
 
+### 4.7 SwiftData Migration Plan
+- `SchemaV1` — the initial schema (all models as defined in §4.3–4.5)
+- `AppMigrationPlan: SchemaMigrationPlan` — starts as an empty plan; every future `@Model` change adds a numbered stage here
+- Policy: **never rename or reorder enum cases** on persisted `@Model` types without a migration stage
+- Highest-risk surface: `Creation.verse: Verse` (Codable blob) — any change to `Verse`'s structure is a silent migration until surfaced here
+
 ---
 
 ## 5. Services
+
+### Actor Isolation Model
+- `OnDeviceGenerator` and `ModelRegistry` run off the main actor — either as `actor` types or as `nonisolated` methods dispatched via `Task.detached`
+- Core ML inference and model downloads are never performed on the main actor
+- All `SwiftData.ModelContext` writes happen on a `@ModelActor`-isolated type
+- Only one heavy generation runs at a time (serial async queue / busy-guard in `GenerationEngine`)
+- Generators return `Sendable` value types only; callers insert into `ModelContext` on the main actor
+
+### APIClient
+Shared URLSession-based HTTP client used by `YouVersionService`, `CloudGenerator`, and `ModelRegistry` downloads:
+- `func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T`
+- Typed `APIError` enum (`.unauthorized`, `.rateLimited`, `.networkUnavailable`, `.decodingFailed`)
+- `URLProtocol`-mockable for testing (no URLSession subclassing)
 
 ### YouVersionService
 - OAuth 2.0 PKCE flow; stores token in Keychain
@@ -254,12 +310,34 @@ enum AspectRatio: String, CaseIterable { case square, portrait45, portrait916 }
 - `verseOfDay() async throws -> Verse`
 - `publishCreation(_ creation: Creation, to platforms: [SocialPlatform]) async throws`
 
-### GenerationEngine
-Single entry point that routes based on `AppSettings.defaultEngine` and model availability:
+### AIAvailability
+Resolves the device's generation capability matrix at startup and on change:
+- On-device LLM: `SystemLanguageModel.default.availability` → `.available` / `.unavailable(reason:)`
+- Core ML models: checks `InstalledModel` records + file presence via `MediaStore`
+- Network: `NWPathMonitor` for reachability
+- Exposes: `canGenerateOnDevice: Bool`, `onDeviceLLMAvailable: Bool`, `isNetworkAvailable: Bool`
+- `GenerationEngine` reads this to route jobs; UI reads this to show/hide cloud options
+
+### GenerationEngine (concrete router)
+Routes generation to `OnDeviceGenerator` or `CloudGenerator` based on `AppSettings.defaultEngine`, model availability from `AIAvailability`, and per-job `selectedModels`.
+
+Per-capability protocols:
+- `ImageGenerating: Actor` — implemented by `CoreMLImageGenerator` (on-device) and `OpenRouterImageGenerator` (cloud)
+- `TextGenerating: Actor` — implemented by `FoundationModelsTextGenerator` and `OpenRouterTextGenerator`
+- `MusicGenerating: Actor` — implemented by `CoreMLMusicGenerator`
+- `VideoGenerating: Actor` — implemented by `CoreMLVideoGenerator`
+
+Canonical signature:
 ```swift
-func generate(job: GenerationJob) -> AsyncThrowingStream<GenerationStatus, Error>
+func generate(_ job: GenerationJob) -> AsyncThrowingStream<GenerationProgress, Error>
 ```
-Internally delegates to `OnDeviceGenerator` or `CloudGenerator`.
+```swift
+struct GenerationProgress: Sendable {
+    let fraction: Double        // 0.0–1.0
+    let stage: String           // "Encoding prompt", "Denoising (12/20)", etc.
+    let result: GenerationResult? // non-nil only on the final emission before completion
+}
+```
 
 ### OnDeviceGenerator
 - Wraps Core ML model inference for each capability
@@ -277,7 +355,23 @@ Internally delegates to `OnDeviceGenerator` or `CloudGenerator`.
 ### PublishService
 - iOS 18+ `ShareLink` for system share sheet
 - Platform-specific: Instagram / TikTok via `UIActivityViewController` with their app URL schemes
-- LinkedIn / Facebook via their SDKs or web OAuth
+- All platforms via `ShareLink`/`UIActivityViewController` for v1. Instagram and TikTok additionally support app URL scheme hand-off (`instagram://library`, `tiktok://`). No third-party SDKs — this preserves zero-dependency stance and avoids App Review/privacy-manifest overhead.
+
+### MediaStore
+- Owns `Application Support/Artifacts/` directory in the app container
+- `save(data: Data, extension: String) throws -> String` — writes file, returns relative path
+- `resolve(_ relativePath: String) -> URL` — resolves relative→absolute at runtime
+- All `Creation.artifactPath` and `thumbnailPath` values are relative; MediaStore resolves them
+- Rule: never store absolute sandbox paths — the container UUID changes on reinstall/restore
+
+### AppRouter (@Observable)
+Single owner of all navigation state:
+- `selectedTab: Tab` (3 tabs: .home, .library, .settings)
+- `isCreatePresented: Bool` (fullScreenCover for CreateStepperView)
+- Per-tab `NavigationPath` (homeStack, libraryStack, settingsStack)
+- `pendingDeepLink: DeepLink?` — queued if onboarding not yet complete
+- On `onOpenURL`: parse → if onboarded, route immediately; else queue
+- Exposed via `@Environment` to all views
 
 ---
 
@@ -289,26 +383,28 @@ RootView
    ├─ WelcomeView
    ├─ YouVersionSignInView
    └─ EngineChooserView
-└─ if onboarded → MainTabView
+└─ if onboarded → MainTabView (3 real tabs: Home · Library · Settings)
    ├─ Tab 0 · HomeView
    │   └─ NavigationStack
+   │       ├─ FAB "＋ Create" → .fullScreenCover: CreateStepperView
    │       └─ push: ArtifactDetailView
-   ├─ Tab 1 · CreateStepperView (sheet / push from FAB)
-   │   ├─ VersePickerStep
-   │   ├─ FormatPickerStep
-   │   ├─ ModelPickerStep  ←─ sheet: ModelPickerSheet
-   │   └─ StyleStep
-   │       └─ push: ArtifactPreviewView
-   │           ├─ sheet: PublishDestinationsView
-   │           │   └─ push: PlatformCropView
-   │           └─ sheet: EditorView (for slideshow/video)
-   ├─ Tab 2 · LibraryView
+   ├─ Tab 1 · LibraryView
    │   └─ NavigationStack
    │       └─ push: ArtifactDetailView
    │           └─ sheet: PublishDestinationsView
-   └─ Tab 3 · SettingsView
-       └─ NavigationStack
-           └─ push: ModelRegistryView
+   ├─ Tab 2 · SettingsView
+   │   └─ NavigationStack
+   │       └─ push: ModelRegistryView
+   ├─ Tab bar: also has a central ＋ button that presents CreateStepperView as .fullScreenCover
+   └─ .fullScreenCover · CreateStepperView
+       ├─ VersePickerStep
+       ├─ FormatPickerStep
+       ├─ ModelPickerStep  ←─ sheet: ModelPickerSheet
+       └─ StyleStep
+           └─ push: ArtifactPreviewView
+               ├─ sheet: PublishDestinationsView
+               │   └─ push: PlatformCropView
+               └─ sheet: EditorView (for slideshow/video)
 ```
 
 All deep-linkable via `bibleai://` URL scheme using `NavigationPath` + `.navigationDestination`.
@@ -343,10 +439,11 @@ All deep-linkable via `bibleai://` URL scheme using `NavigationPath` + `.navigat
 - Resume card: thumbnail + "Continue creating"
 - Section: "Recent" — 2-column masonry grid of `Creation` thumbnails
 - Floating "＋ Create" pill button (accent) in bottom-right, above tab bar
+- ＋ Create FAB opens `CreateStepperView` as a `fullScreenCover`; the tab bar has 3 tabs (Home, Library, Settings) plus a non-tab center ＋ button
 - Bottom tab bar: Home · ＋ · Library · ⚙
 
 ### 7.5 CreateStepperView (3A — Guided Stepper)
-This is the primary create flow, reached from the FAB or the Create tab.
+This is the primary create flow, reached from the Home FAB or the tab bar's center ＋ button (presented as a `fullScreenCover`).
 
 **Progress bar** — 4 segments (Verse / Format / Models / Style)
 
@@ -482,6 +579,7 @@ enum Radius {
 - **Network calls** only occur for: YouVersion verse fetch, OpenRouter/Anthropic cloud generation, social publishing — and only when user explicitly triggers them
 - **Background model downloads** use `URLSession` background configuration so they survive app suspension
 - **Core AI / FoundationModels** — prompts and outputs stay on-device; subject to Apple's privacy guarantees
+- **Cloud generation consent** — first time `CloudGenerator` is invoked, present an explicit "This will send your prompt to [OpenRouter/Anthropic] using your API key. Data is not stored by Bible AI." confirmation sheet. Key validation occurs on save in Settings (one async validation call). Generation routes to on-device if key is missing or invalid.
 
 ---
 
@@ -489,6 +587,7 @@ enum Radius {
 
 | # | Task | Area | Scope | Notes |
 |---|------|------|-------|-------|
+| 0 | Spike: prove SD-Turbo (or a comparable image diffusion model) converts to mlpackage via `coremltools`, loads on an iOS 27 device/simulator, and runs inference in ≤10s on target hardware. If infeasible, pivot to cloud-first for image generation before any UI is built. | Services | L | This is the highest-risk unknown in the project. Block all other image-generation tasks on this spike. |
 | 1 | Create Xcode project targeting iOS 27 beta; configure bundle ID `com.bibleai.app`, SwiftUI lifecycle, add SwiftData framework | Project setup | S | Enable FoundationModels and PhotosUI capabilities |
 | 2 | Implement `BibleAITheme.swift` — Color tokens, Font extensions, Spacing & Radius enums, `Color(hex:)` helper | Design System | S | All screen-specific colors derive from here; no hardcoded hex elsewhere |
 | 3 | Build reusable `PillBadge` component — accent "ON-DEVICE · FREE" variant and muted "CLOUD" variant | Design System | S | Used on model rows, home header, create screen |
@@ -496,12 +595,15 @@ enum Radius {
 | 5 | Build `MediaPlaceholder` — hatched diagonal pattern fill, accepts label text and aspect ratio | Design System | S | Used wherever generated media is not yet available |
 | 6 | Build `CardView` modifier — rounded card with 1.5pt border, shadow, background | Design System | S | `.cardStyle()` ViewModifier |
 | 7 | Define all data model value types: `Verse`, `AIModel`, `GenerationJob`, `GenerationStatus`, `SocialPlatform`, `AspectRatio`, `CreationFormat`, `PrivacySetting` | Models | M | Pure Swift structs / enums; Codable where needed |
-| 8 | Define SwiftData models: `Creation` and `AppSettings` with all properties and relationships | Models | M | `@Model`, migration plan v1 |
+| 8 | Define SwiftData models: `Creation` and `AppSettings` with all properties and relationships | Models | M | `@Model`, `SchemaV1` versioned schema + empty `AppMigrationPlan`; every future schema change adds a stage before touching the model class. |
 | 9 | Configure `ModelContainer` in `BibleAIApp.swift`; inject into environment; add preview container helper | Models | S | |
+| 9a | Implement `AIAvailability` service — resolves on-device LLM (via `SystemLanguageModel.default.availability`), Core ML model presence (`InstalledModel` + file check), and network reachability (`NWPathMonitor`) into a live capability matrix | Services | M | Must be built before `GenerationEngine` (Task 11); `@Observable` so UI can reactively show offline/unavailable states |
+| 9b | Implement `APIClient` — URLSession-based, `async`, typed `APIError`, `URLProtocol`-mockable; used by `YouVersionService`, `CloudGenerator`, and manifest fetch | Services | S | All network-calling services share this; do not hand-roll per-service networking |
 | 10 | Implement `YouVersionService` — OAuth 2.0 PKCE flow, token Keychain storage, `searchVerses`, `verseOfDay` | Services | L | Use ASWebAuthenticationSession; stub responses for simulator |
-| 11 | Define `GenerationEngine` protocol + `AsyncThrowingStream<GenerationStatus, Error>` interface | Services | S | Interface only; concrete implementations follow |
+| 11 | Define per-capability protocols (`ImageGenerating`, `TextGenerating`, `MusicGenerating`, `VideoGenerating`) as `Actor`-constrained protocols; implement concrete `GenerationEngine` router that selects the correct implementation based on `AIAvailability` and job parameters. | Services | S | Interface plus concrete router; concrete generator implementations follow |
 | 12 | Implement `OnDeviceGenerator` stub — accepts `GenerationJob`, simulates progress stream with 3-second fake generation, returns placeholder image | Services | M | Real Core ML integration in later tasks |
 | 13 | Implement `CloudGenerator` — OpenRouter REST client for FLUX image generation and Llama-3 text; reads key from Keychain | Services | L | Handle auth errors, rate limits, streaming where supported |
+| 13a | Add first-cloud-use consent sheet: one-time `@AppStorage`-tracked flag; shown before `CloudGenerator` invokes any network request. Include key validation call in `SettingsView` on key entry. | Services | M | Routes to on-device if key missing or invalid; see §9 cloud consent gate |
 | 14 | Implement `ModelRegistry` — reads bundled `models-manifest.json`, `install(model:)` with `URLSession` background download, progress `AsyncStream`, `delete(model:)`, storage meter | Services | L | Background URLSession identifier: `com.bibleai.modeldownload` |
 | 15 | Create `models-manifest.json` — catalogue SD-Turbo, MusicGen-small, AnimateDiff-lite, Gemma-2 with download URLs, sizes, capabilities | Data | S | Versioned; app checks for manifest updates on launch |
 | 16 | Implement `AuthViewModel` — checks `AppSettings.onboardingCompleted`, drives `RootView` gate | ViewModels | S | |
@@ -509,7 +611,8 @@ enum Radius {
 | 18 | Build `WelcomeView` (screen 1A) — logo, headline, hero `MediaPlaceholder`, OFFLINE pill, "Get started" CTA | Onboarding | M | |
 | 19 | Build `YouVersionSignInView` (screen 1B) — YouVersion logo placeholder, OAuth CTA, "Continue as guest" secondary | Onboarding | M | Calls `YouVersionService.authenticate()` |
 | 20 | Build `EngineChooserView` (screen 1C) — engine option cards, model download progress bar, "Start creating" CTA | Onboarding | M | Triggers `ModelRegistry.install(sdTurbo)` in background |
-| 21 | Build `MainTabView` — 4-tab `TabView` (Home, Create, Library, Settings) with system icons; accent active tab color | Navigation | S | Create tab triggers sheet presentation of `CreateStepperView` |
+| 20a | Build `AppRouter` (`@Observable`): `selectedTab`, `isCreatePresented`, per-tab `NavigationPath`, `pendingDeepLink`; handles onboarding-gate deep-link queueing; exposed via `@Environment` | Navigation | M | Must precede `MainTabView` (Task 21) and deep-link routing (Task 48) |
+| 21 | Build `MainTabView` — 3-tab `TabView` (Home, Library, Settings); center tab bar ＋ button presents `CreateStepperView` as `fullScreenCover`, not as a tab. Accent active-tab tint. | Navigation | S | Center ＋ is a non-tab button presenting `CreateStepperView` as `fullScreenCover` |
 | 22 | Build `HomeView` (screen 2A) — "Home" nav title + OFFLINE OK badge, "Continue creating" resume card, "Recent" section header, 2-column `LazyVGrid` of `Creation` thumbnails, "＋ Create" FAB | Home | L | FAB positioned with `.overlay(alignment: .bottomTrailing)` above safe area |
 | 23 | Build `HomeViewModel` — `@Query` for recent `Creation` items (last 10, sorted by date), last-active job resume state | Home | M | |
 | 24 | Build `CreateViewModel` — step state machine (`currentStep: Int`), holds `verse`, `format`, `selectedModels`, `prompt`, orchestrates job submission | Create | M | `@Observable` |
@@ -534,10 +637,10 @@ enum Radius {
 | 43 | Build `ArtifactDetailView` (screen 7B) — large preview, metadata card (Verse, Models, Privacy toggle), Gallery/Publish/Delete action row, swipe-to-delete with confirmation alert | Library | M | |
 | 44 | Build `SettingsView` (screen 8A) — Connections section, Defaults section, storage meter, navigation to `ModelRegistryView` | Settings | L | Keychain read/write for API keys via `SecItemAdd` / `SecItemCopyMatching` |
 | 45 | Implement Keychain service — `KeychainService.set(key:value:)` / `get(key:)` / `delete(key:)` for OpenRouter and Anthropic keys | Settings | M | No third-party Keychain wrapper; pure `Security` framework |
-| 46 | Implement FoundationModels integration — use `LanguageModelSession` to generate verse-based image prompts (Style step); falls back to templated prompt if unavailable | Services | L | Requires iOS 26+ entitlement; gate with `#available(iOS 26, *)` |
+| 46 | Implement FoundationModels integration — use `LanguageModelSession` to generate verse-based image prompts (Style step); falls back to templated prompt if unavailable | Services | L | Gate on `SystemLanguageModel.default.availability`, not `#available` — handles non-Apple-Intelligence devices and model-not-ready states; each unavailable reason routes to templated-prompt fallback. |
 | 47 | Implement real Core ML image generation — load SD-Turbo mlpackage, accept prompt + seed, emit progress via `AsyncThrowingStream`, return `CGImage` | Services | XL | Requires mlpackage conversion from HuggingFace checkpoint via coremltools |
 | 48 | Implement deep-link routing — `bibleai://create?verse=John+3:16` opens Create flow with verse pre-filled; `bibleai://library/{id}` opens artifact detail | Navigation | M | Register URL scheme in Info.plist; use `onOpenURL` modifier |
 | 49 | Add accent color theming — user can select accent in Settings (purple / teal / burnt-orange); persisted in `AppSettings`; propagated via `@Environment` | Design System | M | Use `ThemeEnvironmentKey` |
 | 50 | Write SwiftUI previews for all screens using `PreviewProvider` with mock data and `previewModelContainer` | Testing | L | Enables rapid visual iteration without running simulator |
 | 51 | Add unit tests for `GenerationEngine` routing logic, `ModelRegistry` state machine, `YouVersionService` response parsing | Testing | M | `XCTest`; mock URLSession with `URLProtocol` |
-| 52 | App icon, launch screen, and `Info.plist` entries (camera, photo library, Keychain sharing, URL scheme, background download) | Polish | M | |
+| 52 | App icon, launch screen, and `Info.plist` entries (camera, photo library, Keychain sharing, URL scheme, background download) | Polish | M | Also add `PrivacyInfo.xcprivacy` declaring required-reason APIs in use (Keychain access, file timestamps) and data-collection practices (none). Required for App Store submission. |
