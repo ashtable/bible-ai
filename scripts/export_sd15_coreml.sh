@@ -24,6 +24,7 @@ BUILD_DIR="build"
 MODEL_VERSION="CompVis/stable-diffusion-v1-5"
 BUNDLE_ID="com.retryai.bibleai"
 DEVICE_UDID=""
+HF_TOKEN="${HF_TOKEN:-}"
 DRY_RUN=0
 SKIP_PUSH=0
 FORCE_PUSH=0
@@ -60,6 +61,9 @@ Options:
   --force-push           Force the push path without a device-connected check.
   --model-version MODEL  HuggingFace model id (default: ${MODEL_VERSION}).
   --bundle-id BUNDLE     App bundle id (default: ${BUNDLE_ID}).
+  --hf-token TOKEN       HuggingFace access token (also read from \$HF_TOKEN).
+                         Required: accept the license at huggingface.co/CompVis/stable-diffusion-v1-5
+                         and create a token at huggingface.co/settings/tokens.
 EOF
 }
 
@@ -121,6 +125,10 @@ while [[ $# -gt 0 ]]; do
             BUNDLE_ID="${2:?--bundle-id requires a value}"
             shift 2
             ;;
+        --hf-token)
+            HF_TOKEN="${2:?--hf-token requires a value}"
+            shift 2
+            ;;
         *)
             err "unknown option: $1"
             usage >&2
@@ -180,7 +188,8 @@ else
         --convert-vae-encoder \
         --attention-implementation SPLIT_EINSUM \
         --bundle-resources-for-swift-cli \
-        -o "$EXPORT_OUT"
+        -o "$EXPORT_OUT" \
+        ${HF_TOKEN:+--hf-auth-token "$HF_TOKEN"}
 fi
 
 # --- Push decision ---------------------------------------------------------
