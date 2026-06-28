@@ -166,7 +166,8 @@ else
         --with torch \
         --with "coremltools>=8.0" \
         --with diffusers \
-        --with transformers \
+        --with "transformers>=4.45" \
+        --with "tokenizers>=0.20" \
         --with scipy \
         python3 -m python_coreml_stable_diffusion.torch2coreml \
         --model-version "$MODEL_VERSION" \
