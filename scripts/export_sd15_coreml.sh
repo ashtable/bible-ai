@@ -161,11 +161,11 @@ if resources_present "$RES_DIR"; then
 else
     echo "Exporting $MODEL_VERSION to Core ML at $EXPORT_OUT ..."
     run mkdir -p "$EXPORT_OUT"
-    # Pin to Python 3.12: tokenizers==0.19.1 (required by ml-stable-diffusion's
-    # transitive deps) has no pre-built wheel for Python 3.13+, causing uv to
-    # fall back to a source build that fails due to a malformed pyproject.toml.
+    # Pin to Python 3.11: ml-stable-diffusion's transitive deps pin
+    # tokenizers==0.19.1 (no wheel for 3.13+) and numpy==1.23.5 (no wheel for
+    # 3.12+; distutils removed). 3.11 has pre-built wheels for both.
     run uv run \
-        --python 3.12 \
+        --python 3.11 \
         --with "git+https://github.com/apple/ml-stable-diffusion" \
         --with torch \
         --with "coremltools>=8.0" \
