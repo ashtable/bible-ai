@@ -161,7 +161,13 @@ if resources_present "$RES_DIR"; then
 else
     echo "Exporting $MODEL_VERSION to Core ML at $EXPORT_OUT ..."
     run mkdir -p "$EXPORT_OUT"
-    run uv run --with torch --with coremltools --with diffusers --with transformers --with scipy \
+    run uv run \
+        --with "git+https://github.com/apple/ml-stable-diffusion" \
+        --with torch \
+        --with "coremltools>=8.0" \
+        --with diffusers \
+        --with transformers \
+        --with scipy \
         python3 -m python_coreml_stable_diffusion.torch2coreml \
         --model-version "$MODEL_VERSION" \
         --convert-text-encoder \
