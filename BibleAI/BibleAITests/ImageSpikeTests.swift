@@ -31,6 +31,7 @@ struct CoreMLImageSpikeAPIShape {
         cfg.stepCount = 20
         cfg.guidanceScale = 7.5
         cfg.seed = 42
+        let _: UInt32 = cfg.seed
         #expect(cfg.stepCount == 20)
         #else
         Issue.record("StableDiffusion module not available")
@@ -94,6 +95,16 @@ struct CoreMLImageSpikeHardware {
     /// and silently passing a hardware-gated test is the correct behavior here.
     private func modelReady() -> Bool {
         CoreMLSpikeRunner.modelIsInstalled
+    }
+
+    @Test func suiteB_requiresHardwareSetup() {
+        guard !CoreMLSpikeRunner.modelIsInstalled else { return }
+        // Records a known issue so CI logs distinguish "skipped — model absent"
+        // from "ran and passed on hardware". Not a test failure — use withKnownIssue
+        // so the suite stays green in CI while making the gap visible.
+        withKnownIssue("Suite B not exercised — sd-1-5 model not side-loaded. Run scripts/export_sd15_coreml.sh and push Resources/ to device before marking Task 0' done.") {
+            Issue.record("model not installed")
+        }
     }
 
     @Test func pipeline_loadsResourcesFromDisk() async throws {

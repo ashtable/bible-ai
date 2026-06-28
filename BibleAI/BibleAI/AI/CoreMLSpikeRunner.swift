@@ -61,6 +61,9 @@ actor CoreMLSpikeRunner {
         try pipeline.loadResources()
     }
 
+    /// Rebuilds and reloads the pipeline on every call — intentional for cold-start
+    /// timing (the ≤15s gate measures from a cold load). Task 12 (`CoreMLImageGenerator`)
+    /// must load once and reuse; do not copy this pattern into the real generator.
     func run(
         prompt: String,
         stepCount: Int = 20
