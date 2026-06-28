@@ -9,6 +9,11 @@ options:
   # Generate a scheme per target so `xcodebuild -scheme BibleAI` works out of the box.
   createIntermediateGroups: true
 
+packages:
+  StableDiffusion:
+    url: https://github.com/apple/ml-stable-diffusion
+    from: "1.1.0"
+
 settings:
   base:
     SWIFT_VERSION: "6.0"          # Swift 6 language mode
@@ -24,6 +29,9 @@ targets:
     platform: iOS
     sources:
       - path: BibleAI
+    dependencies:
+      - package: StableDiffusion
+        product: StableDiffusion
     info:
       path: BibleAI/Info.plist        # synthesized via GENERATE_INFOPLIST_FILE; path kept for explicit keys
       properties:

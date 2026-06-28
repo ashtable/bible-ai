@@ -10,7 +10,9 @@
 		2B0068FFFDF977F1284C85C9 /* BibleAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472FB6766719939D26B29274 /* BibleAIApp.swift */; };
 		503D427FAE08B50C8D8F117A /* ImageSpikeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */; };
 		C1F52DE2DDA20B1E87F7A1F2 /* SDKProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A97BD84490BCAC39672E7E5 /* SDKProbe.swift */; };
+		C5733733A2E9E625A4638A9A /* CoreMLSpikeRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A946FEAFF74A97BB7FEFDB7 /* CoreMLSpikeRunner.swift */; };
 		CA28BDD108E70E76D1046EB9 /* SDKProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */; };
+		DFE8D620F3F94E3455076128 /* StableDiffusion in Frameworks */ = {isa = PBXBuildFile; productRef = FD820604DC1956D695F8F252 /* StableDiffusion */; };
 		F3928752714B7D97489C812B /* AFMAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A946FEAFF74A97BB7FEFDB7 /* CoreMLSpikeRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreMLSpikeRunner.swift; sourceTree = "<group>"; };
 		2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbeTests.swift; sourceTree = "<group>"; };
 		36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSpikeTests.swift; sourceTree = "<group>"; };
 		472FB6766719939D26B29274 /* BibleAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleAIApp.swift; sourceTree = "<group>"; };
@@ -34,6 +37,17 @@
 		B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFMAvailabilityTests.swift; sourceTree = "<group>"; };
 		F288DF7943B85654AACCDD26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		208454BC0B15A01D2B6C6DD3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFE8D620F3F94E3455076128 /* StableDiffusion in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		3C62B305BE098293F755C1ED = {
@@ -77,6 +91,7 @@
 		A53360B94963AB3388B20C68 /* AI */ = {
 			isa = PBXGroup;
 			children = (
+				0A946FEAFF74A97BB7FEFDB7 /* CoreMLSpikeRunner.swift */,
 				5A97BD84490BCAC39672E7E5 /* SDKProbe.swift */,
 			);
 			path = AI;
@@ -90,6 +105,7 @@
 			buildConfigurationList = 2E8FAF1A23CC1B5933D0B3C9 /* Build configuration list for PBXNativeTarget "BibleAI" */;
 			buildPhases = (
 				355B477923757C91E28A93CB /* Sources */,
+				208454BC0B15A01D2B6C6DD3 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -97,6 +113,7 @@
 			);
 			name = BibleAI;
 			packageProductDependencies = (
+				FD820604DC1956D695F8F252 /* StableDiffusion */,
 			);
 			productName = BibleAI;
 			productReference = 5CA62F7F9C9D59A152C70AFC /* BibleAI.app */;
@@ -140,6 +157,9 @@
 			);
 			mainGroup = 3C62B305BE098293F755C1ED;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				530A22742423BEAE634DCC4A /* XCRemoteSwiftPackageReference "ml-stable-diffusion" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 932F3351C46AF9942CCF074B /* Products */;
 			projectDirPath = "";
@@ -157,6 +177,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B0068FFFDF977F1284C85C9 /* BibleAIApp.swift in Sources */,
+				C5733733A2E9E625A4638A9A /* CoreMLSpikeRunner.swift in Sources */,
 				C1F52DE2DDA20B1E87F7A1F2 /* SDKProbe.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -406,6 +427,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		530A22742423BEAE634DCC4A /* XCRemoteSwiftPackageReference "ml-stable-diffusion" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/ml-stable-diffusion";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FD820604DC1956D695F8F252 /* StableDiffusion */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 530A22742423BEAE634DCC4A /* XCRemoteSwiftPackageReference "ml-stable-diffusion" */;
+			productName = StableDiffusion;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FC8EE128065FC01AE87EE314 /* Project object */;
 }
