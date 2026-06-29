@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D1CBB4D98C87DE72AB3F53C /* BundledFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE5EE416B9F634AF27350C8 /* BundledFonts.swift */; };
 		2B0068FFFDF977F1284C85C9 /* BibleAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472FB6766719939D26B29274 /* BibleAIApp.swift */; };
 		503D427FAE08B50C8D8F117A /* ImageSpikeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */; };
+		52957DE6F83B355527650BB4 /* BundledFontsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */; };
 		C1F52DE2DDA20B1E87F7A1F2 /* SDKProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A97BD84490BCAC39672E7E5 /* SDKProbe.swift */; };
 		C5733733A2E9E625A4638A9A /* CoreMLSpikeRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A946FEAFF74A97BB7FEFDB7 /* CoreMLSpikeRunner.swift */; };
 		CA28BDD108E70E76D1046EB9 /* SDKProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */; };
@@ -28,12 +30,14 @@
 
 /* Begin PBXFileReference section */
 		0A946FEAFF74A97BB7FEFDB7 /* CoreMLSpikeRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreMLSpikeRunner.swift; sourceTree = "<group>"; };
+		0BE5EE416B9F634AF27350C8 /* BundledFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledFonts.swift; sourceTree = "<group>"; };
 		2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbeTests.swift; sourceTree = "<group>"; };
 		36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSpikeTests.swift; sourceTree = "<group>"; };
 		472FB6766719939D26B29274 /* BibleAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleAIApp.swift; sourceTree = "<group>"; };
+		4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledFontsTests.swift; sourceTree = "<group>"; };
 		5A97BD84490BCAC39672E7E5 /* SDKProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbe.swift; sourceTree = "<group>"; };
-		5CA62F7F9C9D59A152C70AFC /* BibleAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BibleAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7282958AE17679C518C2D43B /* BibleAITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BibleAITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CA62F7F9C9D59A152C70AFC /* BibleAI.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BibleAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7282958AE17679C518C2D43B /* BibleAITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BibleAITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFMAvailabilityTests.swift; sourceTree = "<group>"; };
 		F288DF7943B85654AACCDD26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -50,6 +54,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		303471FAD2AC674F9EAE615F /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				38E7CDE4158B5626AB37FDF3 /* Fonts */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		38E7CDE4158B5626AB37FDF3 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				0BE5EE416B9F634AF27350C8 /* BundledFonts.swift */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		3C62B305BE098293F755C1ED = {
 			isa = PBXGroup;
 			children = (
@@ -63,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */,
+				4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */,
 				36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */,
 				2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */,
 			);
@@ -84,6 +105,7 @@
 				472FB6766719939D26B29274 /* BibleAIApp.swift */,
 				F288DF7943B85654AACCDD26 /* Info.plist */,
 				A53360B94963AB3388B20C68 /* AI */,
+				303471FAD2AC674F9EAE615F /* Core */,
 			);
 			path = BibleAI;
 			sourceTree = "<group>";
@@ -144,7 +166,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2700;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					1ED80B49650BD5EE70D476B2 = {
+						DevelopmentTeam = P9N5DTWDQ5;
+					};
+					B12BECDB0C0C165A30FA4C4C = {
+						DevelopmentTeam = P9N5DTWDQ5;
+					};
+				};
 			};
 			buildConfigurationList = B10FBBE868C1E1E4F24753BB /* Build configuration list for PBXProject "BibleAI" */;
 			developmentRegion = en;
@@ -175,6 +205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B0068FFFDF977F1284C85C9 /* BibleAIApp.swift in Sources */,
+				0D1CBB4D98C87DE72AB3F53C /* BundledFonts.swift in Sources */,
 				C5733733A2E9E625A4638A9A /* CoreMLSpikeRunner.swift in Sources */,
 				C1F52DE2DDA20B1E87F7A1F2 /* SDKProbe.swift in Sources */,
 			);
@@ -185,6 +216,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3928752714B7D97489C812B /* AFMAvailabilityTests.swift in Sources */,
+				52957DE6F83B355527650BB4 /* BundledFontsTests.swift in Sources */,
 				503D427FAE08B50C8D8F117A /* ImageSpikeTests.swift in Sources */,
 				CA28BDD108E70E76D1046EB9 /* SDKProbeTests.swift in Sources */,
 			);
@@ -205,8 +237,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = P9N5DTWDQ5;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -223,8 +253,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = P9N5DTWDQ5;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -272,6 +300,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = P9N5DTWDQ5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -290,7 +319,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -309,11 +338,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = P9N5DTWDQ5;
 				INFOPLIST_FILE = BibleAI/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -359,6 +386,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = P9N5DTWDQ5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -371,7 +399,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -389,11 +417,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = P9N5DTWDQ5;
 				INFOPLIST_FILE = BibleAI/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
