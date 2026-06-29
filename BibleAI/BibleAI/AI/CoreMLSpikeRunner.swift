@@ -76,11 +76,17 @@ actor CoreMLSpikeRunner {
         cfg.guidanceScale = 7.5
         cfg.seed = 42
         cfg.disableSafety = true   // no SafetyChecker.mlmodelc is side-loaded for the spike
+        // DPM-Solver runs exactly `stepCount` denoising steps. The default PNDM
+        // scheduler appends a duplicate PLMS warm-up timestep, so it reports
+        // stepCount + 1 progress callbacks (21 for a requested 20). DPM-Solver
+        // is also higher quality at the low step counts this speed gate targets.
+        cfg.schedulerType = .dpmSolverMultistepScheduler
 
         var trace: [StepSample] = []
         let images = try pipeline.generateImages(configuration: cfg) { progress in
-            // `PipelineProgress.step` is 0-indexed (timeSteps.enumerated()); the
-            // spike's monotonic-progress assertions expect 1...stepCount.
+            // `PipelineProgress.step` is 0-indexed (timeSteps.enumerated());
+            // `progress.stepCount` is timeSteps.count, which equals `stepCount`
+            // under DPM-Solver. The monotonic-progress assertions expect 1...stepCount.
             trace.append(StepSample(step: progress.step + 1, stepCount: progress.stepCount))
             return true
         }
