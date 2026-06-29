@@ -83,18 +83,36 @@ EOF
     echo "$tmpdir"
 }
 
-# Create a temp dir holding only the named stub binaries (used for the
-# missing-dependency tests). Args: list of binary names ("uv", "xcrun").
+# Create a temp dir of stub binaries for the missing-dependency tests. Args are
+# the tools that should be PRESENT and working; every other known tool (uv,
+# xcrun) is installed as a FAILING stub so the dependency-under-test reads as
+# unavailable even on a machine where the real tool sits in /usr/bin (e.g.
+# /usr/bin/xcrun). The failing stub, placed first on PATH, shadows the real one
+# and exits non-zero — simulating "installed but not usable" in an
+# environment-independent way.
 setup_partial_stubs() {
-    local tmpdir bin
+    local tmpdir bin want present
     tmpdir="$(mktemp -d)"
     TMP_DIRS+=("$tmpdir")
-    for bin in "$@"; do
-        cat > "$tmpdir/$bin" <<EOF
+    for bin in uv xcrun; do
+        present=0
+        for want in "$@"; do
+            [[ "$want" == "$bin" ]] && present=1
+        done
+        if [[ "$present" -eq 1 ]]; then
+            cat > "$tmpdir/$bin" <<EOF
 #!/usr/bin/env bash
 echo "$bin called: \$*" >> /tmp/${bin}_calls.txt
 exit 0
 EOF
+        else
+            # Failing stub: shadows any real ${bin} on PATH and signals "unavailable".
+            cat > "$tmpdir/$bin" <<EOF
+#!/usr/bin/env bash
+echo "$bin (failing stub) called: \$*" >> /tmp/${bin}_calls.txt
+exit 127
+EOF
+        fi
         chmod +x "$tmpdir/$bin"
     done
     echo "$tmpdir"
@@ -242,13 +260,13 @@ test_model_version_override() {
 
 # T10 — shellcheck passes on both files (script under test + this harness).
 # Skips cleanly if shellcheck is not installed; once the main script exists and
-# shellcheck is available, this enforces a zero-warning, zero-error bar.
+# the linter is available, this enforces a zero-warning, zero-error bar.
 test_shellcheck_clean() {
     if ! command -v shellcheck > /dev/null 2>&1; then
         echo "  (shellcheck not installed — skipping lint; install via 'brew install shellcheck')"
         return 0
     fi
-    # shellcheck is present: a missing script-under-test is a genuine failure
+    # The linter is present: a missing script-under-test is a genuine failure
     # (the spec requires T10 to fail until the script exists and lints clean).
     require_script || return 1
     local f count
