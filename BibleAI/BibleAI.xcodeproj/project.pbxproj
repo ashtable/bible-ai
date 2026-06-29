@@ -23,6 +23,7 @@
 		CC978BC56EDF253D811C2A3A /* OFL-Caveat.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0692187211516D2CF20B2682 /* OFL-Caveat.txt */; };
 		CED0A554B01B5DB3915B0CA4 /* NunitoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D3414EFC0902A0BA496E486 /* NunitoSans-SemiBold.ttf */; };
 		DFE8D620F3F94E3455076128 /* StableDiffusion in Frameworks */ = {isa = PBXBuildFile; productRef = FD820604DC1956D695F8F252 /* StableDiffusion */; };
+		E84BE42049E115EA43D04D5A /* BibleAITheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D5CF2637CA0FCCEA489D9C /* BibleAITheme.swift */; };
 		F3928752714B7D97489C812B /* AFMAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +48,7 @@
 		5CA62F7F9C9D59A152C70AFC /* BibleAI.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BibleAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		648E4A8B05D20EEC2FC6132A /* SDKProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbe.swift; sourceTree = "<group>"; };
 		7282958AE17679C518C2D43B /* BibleAITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BibleAITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		73D5CF2637CA0FCCEA489D9C /* BibleAITheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleAITheme.swift; sourceTree = "<group>"; };
 		8715751604E1E5DAC04B1712 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		A2FA06FD1A4EA00F20713F9F /* Caveat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Caveat-Regular.ttf"; sourceTree = "<group>"; };
 		B3BFA756FB0F81C99706F0D5 /* NunitoSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -127,6 +129,14 @@
 			path = Spikes;
 			sourceTree = "<group>";
 		};
+		6B44701561333887DEFC69B8 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				73D5CF2637CA0FCCEA489D9C /* BibleAITheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
 		6E880E8C4D396EF3110BFB5A /* BibleAITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,6 +185,7 @@
 				9EAA0CED5FAD569DF9B36EAB /* Features */,
 				C98D93D7D5D94E6FE5BA7868 /* Resources */,
 				6A861F8B8B294D06A42C4EF3 /* Spikes */,
+				6B44701561333887DEFC69B8 /* Theme */,
 			);
 			path = BibleAI;
 			sourceTree = "<group>";
@@ -290,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C62EB39A51FC6DFD6364139 /* BibleAIApp.swift in Sources */,
+				E84BE42049E115EA43D04D5A /* BibleAITheme.swift in Sources */,
 				0D1CBB4D98C87DE72AB3F53C /* BundledFonts.swift in Sources */,
 				04F9EC903D8D1658D5C40C94 /* CoreMLSpikeRunner.swift in Sources */,
 				AEF80BD17F0E2B32D6218FDF /* RootView.swift in Sources */,
