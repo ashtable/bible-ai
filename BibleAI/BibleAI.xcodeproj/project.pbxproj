@@ -26,6 +26,8 @@
 		DFE8D620F3F94E3455076128 /* StableDiffusion in Frameworks */ = {isa = PBXBuildFile; productRef = FD820604DC1956D695F8F252 /* StableDiffusion */; };
 		E84BE42049E115EA43D04D5A /* BibleAITheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D5CF2637CA0FCCEA489D9C /* BibleAITheme.swift */; };
 		F3928752714B7D97489C812B /* AFMAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */; };
+		A1B2C3D4E5F60718293A4B5D /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5C /* AppRouter.swift */; };
+		B1B2C3D4E5F60718293A4B5D /* CloudProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B2C3D4E5F60718293A4B5C /* CloudProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,8 @@
 		DF1EE203FE7FE2C5DAF4D766 /* BibleAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleAIApp.swift; sourceTree = "<group>"; };
 		F288DF7943B85654AACCDD26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FF17C204CB265B70AD4B0600 /* OFL-NunitoSans.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-NunitoSans.txt"; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4B5C /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		B1B2C3D4E5F60718293A4B5C /* CloudProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +91,7 @@
 		303471FAD2AC674F9EAE615F /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				B1B2C3D4E5F60718293A4B5C /* CloudProvider.swift */,
 				648E4A8B05D20EEC2FC6132A /* SDKProbe.swift */,
 				38E7CDE4158B5626AB37FDF3 /* Fonts */,
 			);
@@ -155,6 +160,7 @@
 		801B64A42F16AF823F0DD5EC /* App */ = {
 			isa = PBXGroup;
 			children = (
+				A1B2C3D4E5F60718293A4B5C /* AppRouter.swift */,
 				DF1EE203FE7FE2C5DAF4D766 /* BibleAIApp.swift */,
 				CF696373AB17081735083D9A /* RootView.swift */,
 			);
@@ -303,9 +309,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1B2C3D4E5F60718293A4B5D /* AppRouter.swift in Sources */,
 				8C62EB39A51FC6DFD6364139 /* BibleAIApp.swift in Sources */,
 				E84BE42049E115EA43D04D5A /* BibleAITheme.swift in Sources */,
 				0D1CBB4D98C87DE72AB3F53C /* BundledFonts.swift in Sources */,
+				B1B2C3D4E5F60718293A4B5D /* CloudProvider.swift in Sources */,
 				04F9EC903D8D1658D5C40C94 /* CoreMLSpikeRunner.swift in Sources */,
 				AEF80BD17F0E2B32D6218FDF /* RootView.swift in Sources */,
 				48DCE02D25DA7D6272A1F376 /* SDKProbe.swift in Sources */,
