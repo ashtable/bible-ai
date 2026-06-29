@@ -614,7 +614,7 @@ Work top to bottom, respecting **Dependencies**. The TDD agent appends ` - Done!
 | 1 - Done! | Xcode project skeleton | Create iOS 27 SwiftUI app target, Swift 6 mode, folder structure, bundled fonts. | — | P1 |
 | 2 - Done! | `BibleAITheme.swift` | Color/spacing/typography tokens; accent resolution; `Font`/`Color` extensions. | 1 | P1 |
 | 3 - Done! | `AppRouter` | `@Observable` router: tabs, per-tab `Route` paths, global `Sheet` enum. | 1 | P1 |
-| 4 | `MainTabView` | `TabView` + per-tab `NavigationStack` wired to `AppRouter`. | 3 | P1 |
+| 4 - Done! | `MainTabView` | `TabView` + per-tab `NavigationStack` wired to `AppRouter`. | 3 | P1 |
 | 5 | SwiftData setup | `Creation`, `AppSettings`, `VerseRef`, `SchemaV1`, empty `AppMigrationPlan`, `ModelContainer` at root. | 1 | P1 |
 | 6 | `MediaStore` | Owns `Artifacts/`; relative-path read/write/delete. | 5 | P2 |
 | 7 | `AIAvailability` | `@Observable` oracle: AFM availability, model presence, reachability; `refresh()`. | 5 | P2 |
