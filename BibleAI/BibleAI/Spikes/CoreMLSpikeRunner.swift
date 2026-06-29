@@ -9,6 +9,7 @@ import StableDiffusion
 /// design.md §6.6 before CoreMLImageGenerator (Task 12) is built.
 /// NOT a generator — no ImageGenerating conformance, no MediaStore coupling.
 actor CoreMLSpikeRunner {
+    // TODO(Task 12): delete or move to BibleAITests — this spike compiles into the app target but is test-only.
 
     enum SpikeError: Error, Equatable {
         case resourcesNotFound(path: String)

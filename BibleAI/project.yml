@@ -18,11 +18,9 @@ packages:
 settings:
   base:
     SWIFT_VERSION: "6.0"          # Swift 6 language mode
-    # iOS 27.0 — owner-chosen deployment target of record (single source of truth).
-    IPHONEOS_DEPLOYMENT_TARGET: "27.0"
     SWIFT_STRICT_CONCURRENCY: complete
     ENABLE_USER_SCRIPT_SANDBOXING: YES
-    GENERATE_INFOPLIST_FILE: YES   # let Xcode synthesize Info.plist (no hand-maintained plist)
+    GENERATE_INFOPLIST_FILE: YES   # merge the INFOPLIST_KEY_* build settings onto the committed BibleAI/Info.plist (hybrid: XcodeGen writes the plist from info.properties, Xcode layers these keys on top)
     # Code-signing team — folded in from manual pbxproj edits so `xcodegen generate`
     # no longer drops it (was applied out-of-band in commits 97a9522 / 0f8187f).
     DEVELOPMENT_TEAM: P9N5DTWDQ5
@@ -39,7 +37,7 @@ targets:
       - package: StableDiffusion
         product: StableDiffusion
     info:
-      path: BibleAI/Info.plist        # synthesized via GENERATE_INFOPLIST_FILE; path kept for explicit keys
+      path: BibleAI/Info.plist        # XcodeGen writes this plist from the properties below; GENERATE_INFOPLIST_FILE then merges INFOPLIST_KEY_* on top. The committed file is required — deleting it breaks the build.
       properties:
         UILaunchScreen: {}
         # Register bundled custom fonts. XcodeGen copies .ttf resources to the
