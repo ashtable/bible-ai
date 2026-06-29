@@ -16,6 +16,7 @@
 		52957DE6F83B355527650BB4 /* BundledFontsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */; };
 		606F88F98DF37FBE662001C7 /* Caveat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2FA06FD1A4EA00F20713F9F /* Caveat-Regular.ttf */; };
 		8C62EB39A51FC6DFD6364139 /* BibleAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1EE203FE7FE2C5DAF4D766 /* BibleAIApp.swift */; };
+		AA11BB22CC33DD44EE55FF66 /* AppRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB11CD22EF33AB44CD55EF66 /* AppRouterTests.swift */; };
 		8CBA9FBA9412DBCD93D2E08F /* NunitoSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DBA799055522C07011C777DD /* NunitoSans-Bold.ttf */; };
 		AEF80BD17F0E2B32D6218FDF /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF696373AB17081735083D9A /* RootView.swift */; };
 		CA28BDD108E70E76D1046EB9 /* SDKProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */; };
@@ -42,6 +43,7 @@
 		0BE5EE416B9F634AF27350C8 /* BundledFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledFonts.swift; sourceTree = "<group>"; };
 		147D22733E8EDC3734C06EC9 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbeTests.swift; sourceTree = "<group>"; };
+		AB11CD22EF33AB44CD55EF66 /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterTests.swift; sourceTree = "<group>"; };
 		36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSpikeTests.swift; sourceTree = "<group>"; };
 		4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledFontsTests.swift; sourceTree = "<group>"; };
 		4D3414EFC0902A0BA496E486 /* NunitoSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */,
+				AB11CD22EF33AB44CD55EF66 /* AppRouterTests.swift */,
 				D2882FBB62143E9F7F942B99 /* BibleAIThemeTests.swift */,
 				4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */,
 				36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */,
@@ -314,6 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3928752714B7D97489C812B /* AFMAvailabilityTests.swift in Sources */,
+				AA11BB22CC33DD44EE55FF66 /* AppRouterTests.swift in Sources */,
 				CB4C0D34204294BE5D4AEEDF /* BibleAIThemeTests.swift in Sources */,
 				52957DE6F83B355527650BB4 /* BundledFontsTests.swift in Sources */,
 				503D427FAE08B50C8D8F117A /* ImageSpikeTests.swift in Sources */,
