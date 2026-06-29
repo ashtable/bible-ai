@@ -3,20 +3,29 @@ name: BibleAI
 options:
   bundleIdPrefix: com.retryai
   deploymentTarget:
-    # iOS 26.0 minimum — FoundationModels (AFM) shipped in iOS 26; building against the iOS 27 SDK.
-    iOS: "26.0"
+    # iOS 27.0 — owner-chosen deployment target of record (single source of truth).
+    # FoundationModels (AFM) shipped in iOS 26, but this app targets iOS 27.
+    iOS: "27.0"
   developmentLanguage: en
   # Generate a scheme per target so `xcodebuild -scheme BibleAI` works out of the box.
   createIntermediateGroups: true
 
+packages:
+  StableDiffusion:
+    url: https://github.com/apple/ml-stable-diffusion
+    from: "1.1.0"
+
 settings:
   base:
     SWIFT_VERSION: "6.0"          # Swift 6 language mode
-    # iOS 26.0 minimum — FoundationModels (AFM) shipped in iOS 26; building against the iOS 27 SDK.
-    IPHONEOS_DEPLOYMENT_TARGET: "26.0"
     SWIFT_STRICT_CONCURRENCY: complete
     ENABLE_USER_SCRIPT_SANDBOXING: YES
-    GENERATE_INFOPLIST_FILE: YES   # let Xcode synthesize Info.plist (no hand-maintained plist)
+    GENERATE_INFOPLIST_FILE: YES   # merge the INFOPLIST_KEY_* build settings onto the committed BibleAI/Info.plist (hybrid: XcodeGen writes the plist from info.properties, Xcode layers these keys on top)
+    # Code-signing team — folded in from manual pbxproj edits so `xcodegen generate`
+    # no longer drops it (was applied out-of-band in commits 97a9522 / 0f8187f).
+    DEVELOPMENT_TEAM: P9N5DTWDQ5
+    # Generate Swift symbols for String Catalogs (matches prior project-level setting).
+    STRING_CATALOG_GENERATE_SYMBOLS: YES
 
 targets:
   BibleAI:
@@ -24,10 +33,21 @@ targets:
     platform: iOS
     sources:
       - path: BibleAI
+    dependencies:
+      - package: StableDiffusion
+        product: StableDiffusion
     info:
-      path: BibleAI/Info.plist        # synthesized via GENERATE_INFOPLIST_FILE; path kept for explicit keys
+      path: BibleAI/Info.plist        # XcodeGen writes this plist from the properties below; GENERATE_INFOPLIST_FILE then merges INFOPLIST_KEY_* on top. The committed file is required — deleting it breaks the build.
       properties:
         UILaunchScreen: {}
+        # Register bundled custom fonts. XcodeGen copies .ttf resources to the
+        # flat bundle root, so bare filenames resolve at runtime. Families:
+        # "Nunito Sans" (UI body/headings) and "Caveat" (display accents).
+        UIAppFonts:
+          - NunitoSans-Regular.ttf
+          - NunitoSans-SemiBold.ttf
+          - NunitoSans-Bold.ttf
+          - Caveat-Regular.ttf
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.retryai.bibleai

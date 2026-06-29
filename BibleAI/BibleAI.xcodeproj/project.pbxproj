@@ -7,10 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B0068FFFDF977F1284C85C9 /* BibleAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472FB6766719939D26B29274 /* BibleAIApp.swift */; };
+		04F9EC903D8D1658D5C40C94 /* CoreMLSpikeRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B0F8DAC9AEC7B5346A630 /* CoreMLSpikeRunner.swift */; };
+		0D1CBB4D98C87DE72AB3F53C /* BundledFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE5EE416B9F634AF27350C8 /* BundledFonts.swift */; };
+		1631D44C6326263E40390AE0 /* NunitoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B3BFA756FB0F81C99706F0D5 /* NunitoSans-Regular.ttf */; };
+		2D851C5261F6FA7995CAADDB /* OFL-NunitoSans.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF17C204CB265B70AD4B0600 /* OFL-NunitoSans.txt */; };
+		48DCE02D25DA7D6272A1F376 /* SDKProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648E4A8B05D20EEC2FC6132A /* SDKProbe.swift */; };
 		503D427FAE08B50C8D8F117A /* ImageSpikeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */; };
-		C1F52DE2DDA20B1E87F7A1F2 /* SDKProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A97BD84490BCAC39672E7E5 /* SDKProbe.swift */; };
+		52957DE6F83B355527650BB4 /* BundledFontsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */; };
+		606F88F98DF37FBE662001C7 /* Caveat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2FA06FD1A4EA00F20713F9F /* Caveat-Regular.ttf */; };
+		8C62EB39A51FC6DFD6364139 /* BibleAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1EE203FE7FE2C5DAF4D766 /* BibleAIApp.swift */; };
+		8CBA9FBA9412DBCD93D2E08F /* NunitoSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DBA799055522C07011C777DD /* NunitoSans-Bold.ttf */; };
+		AEF80BD17F0E2B32D6218FDF /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF696373AB17081735083D9A /* RootView.swift */; };
 		CA28BDD108E70E76D1046EB9 /* SDKProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */; };
+		CC978BC56EDF253D811C2A3A /* OFL-Caveat.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0692187211516D2CF20B2682 /* OFL-Caveat.txt */; };
+		CED0A554B01B5DB3915B0CA4 /* NunitoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D3414EFC0902A0BA496E486 /* NunitoSans-SemiBold.ttf */; };
+		DFE8D620F3F94E3455076128 /* StableDiffusion in Frameworks */ = {isa = PBXBuildFile; productRef = FD820604DC1956D695F8F252 /* StableDiffusion */; };
 		F3928752714B7D97489C812B /* AFMAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,17 +36,79 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0692187211516D2CF20B2682 /* OFL-Caveat.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-Caveat.txt"; sourceTree = "<group>"; };
+		0BE5EE416B9F634AF27350C8 /* BundledFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledFonts.swift; sourceTree = "<group>"; };
+		147D22733E8EDC3734C06EC9 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbeTests.swift; sourceTree = "<group>"; };
 		36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSpikeTests.swift; sourceTree = "<group>"; };
-		472FB6766719939D26B29274 /* BibleAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleAIApp.swift; sourceTree = "<group>"; };
-		5A97BD84490BCAC39672E7E5 /* SDKProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbe.swift; sourceTree = "<group>"; };
+		4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledFontsTests.swift; sourceTree = "<group>"; };
+		4D3414EFC0902A0BA496E486 /* NunitoSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		5CA62F7F9C9D59A152C70AFC /* BibleAI.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BibleAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		648E4A8B05D20EEC2FC6132A /* SDKProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbe.swift; sourceTree = "<group>"; };
 		7282958AE17679C518C2D43B /* BibleAITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BibleAITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8715751604E1E5DAC04B1712 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		A2C1BD9DD0F7B280CC465FB3 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		A2FA06FD1A4EA00F20713F9F /* Caveat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Caveat-Regular.ttf"; sourceTree = "<group>"; };
+		B3BFA756FB0F81C99706F0D5 /* NunitoSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-Regular.ttf"; sourceTree = "<group>"; };
 		B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFMAvailabilityTests.swift; sourceTree = "<group>"; };
+		CE4B0F8DAC9AEC7B5346A630 /* CoreMLSpikeRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreMLSpikeRunner.swift; sourceTree = "<group>"; };
+		CF696373AB17081735083D9A /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		DBA799055522C07011C777DD /* NunitoSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-Bold.ttf"; sourceTree = "<group>"; };
+		DF1EE203FE7FE2C5DAF4D766 /* BibleAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleAIApp.swift; sourceTree = "<group>"; };
 		F288DF7943B85654AACCDD26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FF17C204CB265B70AD4B0600 /* OFL-NunitoSans.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-NunitoSans.txt"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		208454BC0B15A01D2B6C6DD3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFE8D620F3F94E3455076128 /* StableDiffusion in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
+		203890C9F7AEF3983A15781B /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				147D22733E8EDC3734C06EC9 /* .gitkeep */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		303471FAD2AC674F9EAE615F /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				648E4A8B05D20EEC2FC6132A /* SDKProbe.swift */,
+				38E7CDE4158B5626AB37FDF3 /* Fonts */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		373A0425F98C7EE44FA0012F /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				A2FA06FD1A4EA00F20713F9F /* Caveat-Regular.ttf */,
+				DBA799055522C07011C777DD /* NunitoSans-Bold.ttf */,
+				B3BFA756FB0F81C99706F0D5 /* NunitoSans-Regular.ttf */,
+				4D3414EFC0902A0BA496E486 /* NunitoSans-SemiBold.ttf */,
+				0692187211516D2CF20B2682 /* OFL-Caveat.txt */,
+				FF17C204CB265B70AD4B0600 /* OFL-NunitoSans.txt */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		38E7CDE4158B5626AB37FDF3 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				0BE5EE416B9F634AF27350C8 /* BundledFonts.swift */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		3C62B305BE098293F755C1ED = {
 			isa = PBXGroup;
 			children = (
@@ -45,14 +118,40 @@
 			);
 			sourceTree = "<group>";
 		};
+		6A861F8B8B294D06A42C4EF3 /* Spikes */ = {
+			isa = PBXGroup;
+			children = (
+				CE4B0F8DAC9AEC7B5346A630 /* CoreMLSpikeRunner.swift */,
+			);
+			path = Spikes;
+			sourceTree = "<group>";
+		};
+		6B44701561333887DEFC69B8 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				A2C1BD9DD0F7B280CC465FB3 /* .gitkeep */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
 		6E880E8C4D396EF3110BFB5A /* BibleAITests */ = {
 			isa = PBXGroup;
 			children = (
 				B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */,
+				4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */,
 				36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */,
 				2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */,
 			);
 			path = BibleAITests;
+			sourceTree = "<group>";
+		};
+		801B64A42F16AF823F0DD5EC /* App */ = {
+			isa = PBXGroup;
+			children = (
+				DF1EE203FE7FE2C5DAF4D766 /* BibleAIApp.swift */,
+				CF696373AB17081735083D9A /* RootView.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 		932F3351C46AF9942CCF074B /* Products */ = {
@@ -64,22 +163,35 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		9EAA0CED5FAD569DF9B36EAB /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				8715751604E1E5DAC04B1712 /* .gitkeep */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
 		A44B116126097D200C2CFBBE /* BibleAI */ = {
 			isa = PBXGroup;
 			children = (
-				472FB6766719939D26B29274 /* BibleAIApp.swift */,
 				F288DF7943B85654AACCDD26 /* Info.plist */,
-				A53360B94963AB3388B20C68 /* AI */,
+				801B64A42F16AF823F0DD5EC /* App */,
+				303471FAD2AC674F9EAE615F /* Core */,
+				203890C9F7AEF3983A15781B /* Data */,
+				9EAA0CED5FAD569DF9B36EAB /* Features */,
+				C98D93D7D5D94E6FE5BA7868 /* Resources */,
+				6A861F8B8B294D06A42C4EF3 /* Spikes */,
+				6B44701561333887DEFC69B8 /* Theme */,
 			);
 			path = BibleAI;
 			sourceTree = "<group>";
 		};
-		A53360B94963AB3388B20C68 /* AI */ = {
+		C98D93D7D5D94E6FE5BA7868 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				5A97BD84490BCAC39672E7E5 /* SDKProbe.swift */,
+				373A0425F98C7EE44FA0012F /* Fonts */,
 			);
-			path = AI;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -90,6 +202,8 @@
 			buildConfigurationList = 2E8FAF1A23CC1B5933D0B3C9 /* Build configuration list for PBXNativeTarget "BibleAI" */;
 			buildPhases = (
 				355B477923757C91E28A93CB /* Sources */,
+				D91769C2A2632A50F823501A /* Resources */,
+				208454BC0B15A01D2B6C6DD3 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -97,6 +211,7 @@
 			);
 			name = BibleAI;
 			packageProductDependencies = (
+				FD820604DC1956D695F8F252 /* StableDiffusion */,
 			);
 			productName = BibleAI;
 			productReference = 5CA62F7F9C9D59A152C70AFC /* BibleAI.app */;
@@ -129,6 +244,12 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					1ED80B49650BD5EE70D476B2 = {
+						DevelopmentTeam = P9N5DTWDQ5;
+					};
+					B12BECDB0C0C165A30FA4C4C = {
+						DevelopmentTeam = P9N5DTWDQ5;
+					};
 				};
 			};
 			buildConfigurationList = B10FBBE868C1E1E4F24753BB /* Build configuration list for PBXProject "BibleAI" */;
@@ -140,6 +261,9 @@
 			);
 			mainGroup = 3C62B305BE098293F755C1ED;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				530A22742423BEAE634DCC4A /* XCRemoteSwiftPackageReference "ml-stable-diffusion" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 932F3351C46AF9942CCF074B /* Products */;
 			projectDirPath = "";
@@ -151,13 +275,32 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		D91769C2A2632A50F823501A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				606F88F98DF37FBE662001C7 /* Caveat-Regular.ttf in Resources */,
+				8CBA9FBA9412DBCD93D2E08F /* NunitoSans-Bold.ttf in Resources */,
+				1631D44C6326263E40390AE0 /* NunitoSans-Regular.ttf in Resources */,
+				CED0A554B01B5DB3915B0CA4 /* NunitoSans-SemiBold.ttf in Resources */,
+				CC978BC56EDF253D811C2A3A /* OFL-Caveat.txt in Resources */,
+				2D851C5261F6FA7995CAADDB /* OFL-NunitoSans.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		355B477923757C91E28A93CB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B0068FFFDF977F1284C85C9 /* BibleAIApp.swift in Sources */,
-				C1F52DE2DDA20B1E87F7A1F2 /* SDKProbe.swift in Sources */,
+				8C62EB39A51FC6DFD6364139 /* BibleAIApp.swift in Sources */,
+				0D1CBB4D98C87DE72AB3F53C /* BundledFonts.swift in Sources */,
+				04F9EC903D8D1658D5C40C94 /* CoreMLSpikeRunner.swift in Sources */,
+				AEF80BD17F0E2B32D6218FDF /* RootView.swift in Sources */,
+				48DCE02D25DA7D6272A1F376 /* SDKProbe.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +309,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3928752714B7D97489C812B /* AFMAvailabilityTests.swift in Sources */,
+				52957DE6F83B355527650BB4 /* BundledFontsTests.swift in Sources */,
 				503D427FAE08B50C8D8F117A /* ImageSpikeTests.swift in Sources */,
 				CA28BDD108E70E76D1046EB9 /* SDKProbeTests.swift in Sources */,
 			);
@@ -249,6 +393,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = P9N5DTWDQ5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -267,12 +412,13 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -333,6 +479,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = P9N5DTWDQ5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -345,11 +492,12 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -406,6 +554,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		530A22742423BEAE634DCC4A /* XCRemoteSwiftPackageReference "ml-stable-diffusion" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/ml-stable-diffusion";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FD820604DC1956D695F8F252 /* StableDiffusion */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 530A22742423BEAE634DCC4A /* XCRemoteSwiftPackageReference "ml-stable-diffusion" */;
+			productName = StableDiffusion;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FC8EE128065FC01AE87EE314 /* Project object */;
 }

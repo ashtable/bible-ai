@@ -28,4 +28,15 @@ enum SDKProbe {
         return false
         #endif
     }
+
+    /// Task 0': true when Apple's `ml-stable-diffusion` (`StableDiffusion`) module
+    /// is linked. The package dependency is intentionally absent at the start of
+    /// Task 0' — this resolves `false` until the spike adds it.
+    static var hasStableDiffusion: Bool {
+        #if canImport(StableDiffusion)
+        return true
+        #else
+        return false
+        #endif
+    }
 }
