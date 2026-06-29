@@ -611,7 +611,7 @@ Work top to bottom, respecting **Dependencies**. The TDD agent appends ` - Done!
 |---|---|---|---|---|
 | 0 - Done! | Core AI image spike (HARD BLOCKER) | Export SD 1.5 or FLUX.2 Klein 4B to `.aimodel`; run inference on iOS 27 target hardware in ≤15s. Confirm `CoreAIDiffusionPipeline` API. | — | P0 |
 | 0' - Done! | Core ML image spike | Export SD 1.5 to `.mlpackage` via `coremltools`, compile to `.mlmodelc`; run inference on iOS 27 target hardware in ≤15s. Confirm Core ML diffusers API. Unblocks Tasks 12, 13, 52, 53. | — | P0 |
-| 1 | Xcode project skeleton | Create iOS 27 SwiftUI app target, Swift 6 mode, folder structure, bundled fonts. | — | P1 |
+| 1 - Done! | Xcode project skeleton | Create iOS 27 SwiftUI app target, Swift 6 mode, folder structure, bundled fonts. | — | P1 |
 | 2 | `BibleAITheme.swift` | Color/spacing/typography tokens; accent resolution; `Font`/`Color` extensions. | 1 | P1 |
 | 3 | `AppRouter` | `@Observable` router: tabs, per-tab `Route` paths, global `Sheet` enum. | 1 | P1 |
 | 4 | `MainTabView` | `TabView` + per-tab `NavigationStack` wired to `AppRouter`. | 3 | P1 |
