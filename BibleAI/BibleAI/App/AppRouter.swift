@@ -42,7 +42,7 @@ final class AppRouter {
         self[keyPath: Self.path(for: tab)].removeAll()
     }
 
-    static func path(for tab: Tab) -> ReferenceWritableKeyPath<AppRouter, [Route]> {
+    private static func path(for tab: Tab) -> ReferenceWritableKeyPath<AppRouter, [Route]> {
         switch tab {
         case .home:     \.homePath
         case .create:   \.createPath
