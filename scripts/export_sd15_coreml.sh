@@ -21,7 +21,7 @@ set -euo pipefail
 # --- Defaults --------------------------------------------------------------
 
 BUILD_DIR="build"
-MODEL_VERSION="CompVis/stable-diffusion-v1-5"
+MODEL_VERSION="Lykon/dreamshaper-8"
 BUNDLE_ID="com.retryai.bibleai"
 DEVICE_UDID=""
 HF_TOKEN="${HF_TOKEN:-}"
@@ -41,7 +41,7 @@ RESOURCE_FILES=(
 )
 
 # On-device destination, relative to the app's Application Support container.
-DEVICE_SUBDIR="Models/sd-1-5"
+DEVICE_SUBDIR="Library/Application Support/Models/sd-1-5"
 
 # --- Helpers ---------------------------------------------------------------
 
@@ -62,8 +62,7 @@ Options:
   --model-version MODEL  HuggingFace model id (default: ${MODEL_VERSION}).
   --bundle-id BUNDLE     App bundle id (default: ${BUNDLE_ID}).
   --hf-token TOKEN       HuggingFace access token (also read from \$HF_TOKEN).
-                         Required: accept the license at huggingface.co/CompVis/stable-diffusion-v1-5
-                         and create a token at huggingface.co/settings/tokens.
+                         Not required for Lykon/dreamshaper-8 (public SD 1.5 fine-tune, no gate).
 EOF
 }
 
@@ -205,31 +204,50 @@ fi
 DEVICE_ARGS=()
 if [[ -n "$DEVICE_UDID" ]]; then
     DEVICE_ARGS=(--device "$DEVICE_UDID")
-elif [[ "$FORCE_PUSH" -eq 1 ]]; then
-    : # push to the default device with no UDID
 elif [[ "$DRY_RUN" -eq 1 ]]; then
-    : # dry-run plans the push without requiring a real device
+    : # dry-run: plan the push without a real device; skip UDID detection
 else
-    if ! xcrun devicectl list devices > /dev/null 2>&1; then
-        echo "No device connected and no --device-udid/--force-push given; skipping push."
+    # Auto-detect the first connected physical device via devicectl JSON output.
+    _tmp=$(mktemp)
+    xcrun devicectl list devices --json-output "$_tmp" > /dev/null 2>&1 || true
+    AUTO_UDID=$(uv run --quiet --python 3.11 python3 -c "
+import json, sys
+try:
+    devs = json.load(open('$_tmp')).get('result', {}).get('devices', [])
+    print(devs[0]['identifier']) if devs else sys.exit(1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null || true)
+    rm -f "$_tmp"
+    if [[ -z "$AUTO_UDID" ]]; then
+        if [[ "$FORCE_PUSH" -eq 1 ]]; then
+            err "--force-push requires a connected device or --device-udid."
+            exit 1
+        fi
+        echo "No device connected and no --device-udid given; skipping push."
         exit 0
     fi
+    echo "Auto-detected device: $AUTO_UDID"
+    DEVICE_ARGS=(--device "$AUTO_UDID")
 fi
 
 # --- Push phase ------------------------------------------------------------
-# Flatten <build>/Resources/<artifact> -> container Application Support/Models/sd-1-5/<artifact>.
-# The destination must NOT carry the Resources/ subdirectory through to the device.
+# Copy the entire local Resources/ tree to the container in ONE devicectl call.
+# `devicectl device copy to` of a directory source recurses fully and creates
+# intermediate destination directories, so copying <build>/.../Resources to
+# "$DEVICE_SUBDIR" lands all 6 artifacts at $DEVICE_SUBDIR/<artifact> with the
+# correct file/dir types (verified 2026-06-28).
+#
+# Do NOT decompose this into per-file copies: `copy to` with a FILE source whose
+# destination is an existing directory *replaces that directory with the file*,
+# which silently corrupts .mlmodelc bundles. A single directory copy avoids that.
 
-echo "Pushing ${#RESOURCE_FILES[@]} artifacts to $BUNDLE_ID (Application Support/$DEVICE_SUBDIR/) ..."
-for f in "${RESOURCE_FILES[@]}"; do
-    src="$RES_DIR/$f"
-    dest="$DEVICE_SUBDIR/$f"
-    run xcrun devicectl device copy to \
-        ${DEVICE_ARGS[@]+"${DEVICE_ARGS[@]}"} \
-        --domain-type appDataContainer \
-        --domain-identifier "$BUNDLE_ID" \
-        --source "$src" \
-        --destination "$dest"
-done
+echo "Pushing Resources/ tree to $BUNDLE_ID ($DEVICE_SUBDIR/) ..."
+run xcrun devicectl device copy to \
+    ${DEVICE_ARGS[@]+"${DEVICE_ARGS[@]}"} \
+    --domain-type appDataContainer \
+    --domain-identifier "$BUNDLE_ID" \
+    --source "$RES_DIR" \
+    --destination "$DEVICE_SUBDIR"
 
 echo "Done."
