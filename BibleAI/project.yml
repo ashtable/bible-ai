@@ -42,6 +42,14 @@ targets:
       path: BibleAI/Info.plist        # synthesized via GENERATE_INFOPLIST_FILE; path kept for explicit keys
       properties:
         UILaunchScreen: {}
+        # Register bundled custom fonts. XcodeGen copies .ttf resources to the
+        # flat bundle root, so bare filenames resolve at runtime. Families:
+        # "Nunito Sans" (UI body/headings) and "Caveat" (display accents).
+        UIAppFonts:
+          - NunitoSans-Regular.ttf
+          - NunitoSans-SemiBold.ttf
+          - NunitoSans-Bold.ttf
+          - Caveat-Regular.ttf
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.retryai.bibleai
