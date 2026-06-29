@@ -10,13 +10,16 @@
 		04F9EC903D8D1658D5C40C94 /* CoreMLSpikeRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B0F8DAC9AEC7B5346A630 /* CoreMLSpikeRunner.swift */; };
 		0D1CBB4D98C87DE72AB3F53C /* BundledFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE5EE416B9F634AF27350C8 /* BundledFonts.swift */; };
 		1631D44C6326263E40390AE0 /* NunitoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B3BFA756FB0F81C99706F0D5 /* NunitoSans-Regular.ttf */; };
+		240D7E7603B45BC521A9025A /* CloudProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBB5091C712C62DBFFBE021 /* CloudProvider.swift */; };
 		2D851C5261F6FA7995CAADDB /* OFL-NunitoSans.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF17C204CB265B70AD4B0600 /* OFL-NunitoSans.txt */; };
+		4128AB11B40D91489145BF99 /* AppRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56013E53059BAA050F47027 /* AppRouterTests.swift */; };
+		4336B0A08F07BC1D8DFF9B79 /* MainTabViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B0C692B222DC3800618788 /* MainTabViewTests.swift */; };
 		48DCE02D25DA7D6272A1F376 /* SDKProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648E4A8B05D20EEC2FC6132A /* SDKProbe.swift */; };
+		4F7657292FB44A21FB6330FD /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0747E7E9C88BFA68BB0BC5EE /* MainTabView.swift */; };
 		503D427FAE08B50C8D8F117A /* ImageSpikeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */; };
 		52957DE6F83B355527650BB4 /* BundledFontsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */; };
 		606F88F98DF37FBE662001C7 /* Caveat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2FA06FD1A4EA00F20713F9F /* Caveat-Regular.ttf */; };
 		8C62EB39A51FC6DFD6364139 /* BibleAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1EE203FE7FE2C5DAF4D766 /* BibleAIApp.swift */; };
-		AA11BB22CC33DD44EE55FF66 /* AppRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB11CD22EF33AB44CD55EF66 /* AppRouterTests.swift */; };
 		8CBA9FBA9412DBCD93D2E08F /* NunitoSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DBA799055522C07011C777DD /* NunitoSans-Bold.ttf */; };
 		AEF80BD17F0E2B32D6218FDF /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF696373AB17081735083D9A /* RootView.swift */; };
 		CA28BDD108E70E76D1046EB9 /* SDKProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */; };
@@ -26,8 +29,7 @@
 		DFE8D620F3F94E3455076128 /* StableDiffusion in Frameworks */ = {isa = PBXBuildFile; productRef = FD820604DC1956D695F8F252 /* StableDiffusion */; };
 		E84BE42049E115EA43D04D5A /* BibleAITheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D5CF2637CA0FCCEA489D9C /* BibleAITheme.swift */; };
 		F3928752714B7D97489C812B /* AFMAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */; };
-		A1B2C3D4E5F60718293A4B5D /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5C /* AppRouter.swift */; };
-		B1B2C3D4E5F60718293A4B5D /* CloudProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B2C3D4E5F60718293A4B5C /* CloudProvider.swift */; };
+		FCF5EF3D766E87B45D29EFD2 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EE65631700C6FF333188B6 /* AppRouter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,10 +44,12 @@
 
 /* Begin PBXFileReference section */
 		0692187211516D2CF20B2682 /* OFL-Caveat.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-Caveat.txt"; sourceTree = "<group>"; };
+		0747E7E9C88BFA68BB0BC5EE /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		09EE65631700C6FF333188B6 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		0BE5EE416B9F634AF27350C8 /* BundledFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledFonts.swift; sourceTree = "<group>"; };
 		147D22733E8EDC3734C06EC9 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		14B0C692B222DC3800618788 /* MainTabViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewTests.swift; sourceTree = "<group>"; };
 		2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKProbeTests.swift; sourceTree = "<group>"; };
-		AB11CD22EF33AB44CD55EF66 /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterTests.swift; sourceTree = "<group>"; };
 		36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSpikeTests.swift; sourceTree = "<group>"; };
 		4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledFontsTests.swift; sourceTree = "<group>"; };
 		4D3414EFC0902A0BA496E486 /* NunitoSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -57,15 +61,15 @@
 		A2FA06FD1A4EA00F20713F9F /* Caveat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Caveat-Regular.ttf"; sourceTree = "<group>"; };
 		B3BFA756FB0F81C99706F0D5 /* NunitoSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-Regular.ttf"; sourceTree = "<group>"; };
 		B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFMAvailabilityTests.swift; sourceTree = "<group>"; };
+		BDBB5091C712C62DBFFBE021 /* CloudProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudProvider.swift; sourceTree = "<group>"; };
 		CE4B0F8DAC9AEC7B5346A630 /* CoreMLSpikeRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreMLSpikeRunner.swift; sourceTree = "<group>"; };
 		CF696373AB17081735083D9A /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		D2882FBB62143E9F7F942B99 /* BibleAIThemeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleAIThemeTests.swift; sourceTree = "<group>"; };
 		DBA799055522C07011C777DD /* NunitoSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-Bold.ttf"; sourceTree = "<group>"; };
 		DF1EE203FE7FE2C5DAF4D766 /* BibleAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleAIApp.swift; sourceTree = "<group>"; };
 		F288DF7943B85654AACCDD26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F56013E53059BAA050F47027 /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterTests.swift; sourceTree = "<group>"; };
 		FF17C204CB265B70AD4B0600 /* OFL-NunitoSans.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-NunitoSans.txt"; sourceTree = "<group>"; };
-		A1B2C3D4E5F60718293A4B5C /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
-		B1B2C3D4E5F60718293A4B5C /* CloudProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,7 +95,7 @@
 		303471FAD2AC674F9EAE615F /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				B1B2C3D4E5F60718293A4B5C /* CloudProvider.swift */,
+				BDBB5091C712C62DBFFBE021 /* CloudProvider.swift */,
 				648E4A8B05D20EEC2FC6132A /* SDKProbe.swift */,
 				38E7CDE4158B5626AB37FDF3 /* Fonts */,
 			);
@@ -148,10 +152,11 @@
 			isa = PBXGroup;
 			children = (
 				B4A188835C9D0A645621EBB6 /* AFMAvailabilityTests.swift */,
-				AB11CD22EF33AB44CD55EF66 /* AppRouterTests.swift */,
+				F56013E53059BAA050F47027 /* AppRouterTests.swift */,
 				D2882FBB62143E9F7F942B99 /* BibleAIThemeTests.swift */,
 				4B66A5A56F84F6D7FA76FACB /* BundledFontsTests.swift */,
 				36D231E07AB9C14E32937EDB /* ImageSpikeTests.swift */,
+				14B0C692B222DC3800618788 /* MainTabViewTests.swift */,
 				2798ADD9FEDC794E5597B411 /* SDKProbeTests.swift */,
 			);
 			path = BibleAITests;
@@ -160,8 +165,9 @@
 		801B64A42F16AF823F0DD5EC /* App */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60718293A4B5C /* AppRouter.swift */,
+				09EE65631700C6FF333188B6 /* AppRouter.swift */,
 				DF1EE203FE7FE2C5DAF4D766 /* BibleAIApp.swift */,
+				0747E7E9C88BFA68BB0BC5EE /* MainTabView.swift */,
 				CF696373AB17081735083D9A /* RootView.swift */,
 			);
 			path = App;
@@ -309,12 +315,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B2C3D4E5F60718293A4B5D /* AppRouter.swift in Sources */,
+				FCF5EF3D766E87B45D29EFD2 /* AppRouter.swift in Sources */,
 				8C62EB39A51FC6DFD6364139 /* BibleAIApp.swift in Sources */,
 				E84BE42049E115EA43D04D5A /* BibleAITheme.swift in Sources */,
 				0D1CBB4D98C87DE72AB3F53C /* BundledFonts.swift in Sources */,
-				B1B2C3D4E5F60718293A4B5D /* CloudProvider.swift in Sources */,
+				240D7E7603B45BC521A9025A /* CloudProvider.swift in Sources */,
 				04F9EC903D8D1658D5C40C94 /* CoreMLSpikeRunner.swift in Sources */,
+				4F7657292FB44A21FB6330FD /* MainTabView.swift in Sources */,
 				AEF80BD17F0E2B32D6218FDF /* RootView.swift in Sources */,
 				48DCE02D25DA7D6272A1F376 /* SDKProbe.swift in Sources */,
 			);
@@ -325,10 +332,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3928752714B7D97489C812B /* AFMAvailabilityTests.swift in Sources */,
-				AA11BB22CC33DD44EE55FF66 /* AppRouterTests.swift in Sources */,
+				4128AB11B40D91489145BF99 /* AppRouterTests.swift in Sources */,
 				CB4C0D34204294BE5D4AEEDF /* BibleAIThemeTests.swift in Sources */,
 				52957DE6F83B355527650BB4 /* BundledFontsTests.swift in Sources */,
 				503D427FAE08B50C8D8F117A /* ImageSpikeTests.swift in Sources */,
+				4336B0A08F07BC1D8DFF9B79 /* MainTabViewTests.swift in Sources */,
 				CA28BDD108E70E76D1046EB9 /* SDKProbeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
