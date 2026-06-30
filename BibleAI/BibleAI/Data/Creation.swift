@@ -39,8 +39,8 @@ final class Creation {
         musicModelID: String? = nil,
         artifactRelativePaths: [String] = []
     ) {
-        assert(artifactRelativePaths.allSatisfy { !$0.hasPrefix("/") },
-               "artifactRelativePaths must be relative, got an absolute path")
+        precondition(artifactRelativePaths.allSatisfy { !$0.hasPrefix("/") },
+                     "artifactRelativePaths must be relative, got an absolute path")
         self.id = id
         self.createdAt = createdAt
         self.verse = verse

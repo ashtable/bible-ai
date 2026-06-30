@@ -75,4 +75,26 @@ struct PersistedEnumsTests {
             #expect(try JSONDecoder().decode(EngineChoice.self, from: data) == c)
         }
     }
+
+    // MARK: AccentChoice
+
+    @Test("AccentChoice has exactly purple/teal/burntOrange")
+    func accentChoiceCasesAreExhaustive() {
+        #expect(Set(AccentChoice.allCases) == [.purple, .teal, .burntOrange])
+    }
+
+    @Test("AccentChoice rawValues are pinned strings")
+    func accentChoiceRawValuesArePinned() {
+        #expect(AccentChoice.purple.rawValue == "purple")
+        #expect(AccentChoice.teal.rawValue == "teal")
+        #expect(AccentChoice.burntOrange.rawValue == "burntOrange")
+    }
+
+    @Test("AccentChoice Codable round-trip")
+    func accentChoiceCodableRoundTrip() throws {
+        for c in AccentChoice.allCases {
+            let data = try JSONEncoder().encode(c)
+            #expect(try JSONDecoder().decode(AccentChoice.self, from: data) == c)
+        }
+    }
 }
