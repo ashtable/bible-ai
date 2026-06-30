@@ -3,70 +3,29 @@ import SwiftData
 
 @Model
 final class Creation {
-    // iOS 27 beta SwiftData SIGTRAP on ctx.insert() when the schema contains
-    // ANY Codable-backed property (enums, [String]). All stored properties are
-    // raw primitives; public accessors reconstruct the domain types.
     @Attribute(.unique) var id: UUID
     var createdAt: Date
 
-    // VerseRef primitives — four Strings, each stored natively.
-    // verseReference/verseBook/verseTranslation are the #Predicate targets.
+    /// Codable composite blob. DO NOT #Predicate on `verse.*` — runtime trap.
+    /// Query via verseReference / verseBook / verseTranslation instead.
+    var verse: VerseRef
+
+    // Denormalized scalar mirrors of `verse` — the ONLY legal predicate targets.
     var verseReference: String
     var verseBook: String
     var verseTranslation: String
-    var verseText: String
 
-    // format / privacy — stored as raw String values (enum Codable blobs trap).
-    var formatRaw: String
-    var privacyRaw: String
-
+    var format: CreationFormat
+    var privacy: Privacy
     var isEphemeral: Bool
 
     var imageModelID: String?
     var textModelID: String?
     var musicModelID: String?
 
-    // [String] is stored via Codable encoding which also traps. Serialised as a
-    // newline-delimited String instead (paths never contain newlines).
-    var artifactRelativePathsRaw: String
-
-    // MARK: — Computed accessors (not persisted by SwiftData)
-
-    /// Assembles a VerseRef from stored String primitives.
-    /// DO NOT #Predicate on `verse.*` — use verseReference/verseBook/verseTranslation.
-    var verse: VerseRef {
-        get { VerseRef(reference: verseReference, book: verseBook,
-                       translation: verseTranslation, text: verseText) }
-        set {
-            verseReference = newValue.reference
-            verseBook = newValue.book
-            verseTranslation = newValue.translation
-            verseText = newValue.text
-        }
-    }
-
-    var format: CreationFormat {
-        get { CreationFormat(rawValue: formatRaw) ?? .image }
-        set { formatRaw = newValue.rawValue }
-    }
-
-    var privacy: Privacy {
-        get { Privacy(rawValue: privacyRaw) ?? .private }
-        set { privacyRaw = newValue.rawValue }
-    }
-
-    var artifactRelativePaths: [String] {
-        get {
-            artifactRelativePathsRaw.isEmpty
-                ? []
-                : artifactRelativePathsRaw.components(separatedBy: "\n")
-        }
-        set {
-            assert(newValue.allSatisfy { !$0.hasPrefix("/") },
-                   "artifactRelativePaths must be relative, got an absolute path")
-            artifactRelativePathsRaw = newValue.joined(separator: "\n")
-        }
-    }
+    /// Relative to the Artifacts container — NEVER absolute (container UUID
+    /// rotates on reinstall).
+    var artifactRelativePaths: [String]
 
     init(
         id: UUID = UUID(),
@@ -84,16 +43,16 @@ final class Creation {
                "artifactRelativePaths must be relative, got an absolute path")
         self.id = id
         self.createdAt = createdAt
+        self.verse = verse
         self.verseReference = verse.reference
         self.verseBook = verse.book
         self.verseTranslation = verse.translation
-        self.verseText = verse.text
-        self.formatRaw = format.rawValue
-        self.privacyRaw = privacy.rawValue
+        self.format = format
+        self.privacy = privacy
         self.isEphemeral = isEphemeral
         self.imageModelID = imageModelID
         self.textModelID = textModelID
         self.musicModelID = musicModelID
-        self.artifactRelativePathsRaw = artifactRelativePaths.joined(separator: "\n")
+        self.artifactRelativePaths = artifactRelativePaths
     }
 }
