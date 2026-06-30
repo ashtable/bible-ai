@@ -1,4 +1,5 @@
 import Testing
+import Foundation
 @testable import BibleAI
 
 @Suite("Task 5 — persisted enums")
