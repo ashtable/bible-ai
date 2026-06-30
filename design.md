@@ -615,7 +615,7 @@ Work top to bottom, respecting **Dependencies**. The TDD agent appends ` - Done!
 | 2 - Done! | `BibleAITheme.swift` | Color/spacing/typography tokens; accent resolution; `Font`/`Color` extensions. | 1 | P1 |
 | 3 - Done! | `AppRouter` | `@Observable` router: tabs, per-tab `Route` paths, global `Sheet` enum. | 1 | P1 |
 | 4 - Done! | `MainTabView` | `TabView` + per-tab `NavigationStack` wired to `AppRouter`. | 3 | P1 |
-| 5 | SwiftData setup | `Creation`, `AppSettings`, `VerseRef`, `SchemaV1`, empty `AppMigrationPlan`, `ModelContainer` at root. | 1 | P1 |
+| 5 - Done! | SwiftData setup | `Creation`, `AppSettings`, `VerseRef`, `SchemaV1`, empty `AppMigrationPlan`, `ModelContainer` at root. | 1 | P1 |
 | 6 | `MediaStore` | Owns `Artifacts/`; relative-path read/write/delete. | 5 | P2 |
 | 7 | `AIAvailability` | `@Observable` oracle: AFM availability, model presence, reachability; `refresh()`. | 5 | P2 |
 | 8 | `KeychainStore` | Keychain CRUD for OpenRouter/Anthropic keys. | 1 | P2 |
